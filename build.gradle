@@ -10,6 +10,10 @@ plugins {
 }
 
 allprojects {
+    def artifactory_contextUrl = System.getenv().get("ARTIFACTORY_URL");
+    def artifactory_user = System.getenv().get("ARTIFACTORY_USER");
+    def artifactory_password = System.getenv().get("ARTIFACTORY_PASSWORD");
+
     apply plugin: 'gov.cms.ab2d.plugin'
     dependencies {
         implementation 'com.squareup.okhttp3:okhttp:4.9.3'
