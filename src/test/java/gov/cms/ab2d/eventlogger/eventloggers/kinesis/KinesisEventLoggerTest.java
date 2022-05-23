@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+
 import static gov.cms.ab2d.eventlogger.eventloggers.kinesis.KinesisEventProcessor.getJsonString;
 import static gov.cms.ab2d.eventlogger.utils.UtilMethods.camelCaseToUnderscore;
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,7 +42,7 @@ import static org.mockito.Mockito.doReturn;
 @Testcontainers
 class KinesisEventLoggerTest {
     @Container
-    private static final PostgreSQLContainer postgreSQLContainer = new AB2DPostgresqlContainer();
+    private static final PostgreSQLContainer POSTGRESQL_CONTAINER = new AB2DPostgresqlContainer();
 
     @Autowired
     private Ab2dEnvironment environment;
@@ -211,10 +212,11 @@ class KinesisEventLoggerTest {
         logger.log(e, true);
 
         try {
-            byte[] array = firehose.latestRecord.getData().array();
+            byte[] array = firehose.getLatestRecord().getData().array();
 
             ObjectMapper mapper = new ObjectMapper();
-            Map<String, Object> event = mapper.readValue(new String(array), new TypeReference<>() {});
+            Map<String, Object> event = mapper.readValue(new String(array), new TypeReference<>() {
+            });
 
             assertTrue(event.containsKey("organization"));
             assertNull(event.get("organization"));

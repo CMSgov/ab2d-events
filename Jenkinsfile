@@ -17,7 +17,7 @@ pipeline {
         stage ('Build files') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'artifactoryuserpass', usernameVariable: 'ARTIFACTORY_USER', passwordVariable: 'ARTIFACTORY_PASSWORD')]) {
-                    sh 'gradle -b build.gradle '
+                    sh 'gradle build'
                 }
             }
         }
@@ -25,7 +25,7 @@ pipeline {
         stage ('Do tests') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'artifactoryuserpass', usernameVariable: 'ARTIFACTORY_USER', passwordVariable: 'ARTIFACTORY_PASSWORD')]) {
-                    sh 'gradle clean test --info -b build.gradle'
+                    sh 'gradle clean test --info build'
                 }
             }
         }
@@ -33,7 +33,7 @@ pipeline {
         stage ('Build Jar') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'artifactoryuserpass', usernameVariable: 'ARTIFACTORY_USER', passwordVariable: 'ARTIFACTORY_PASSWORD')]) {
-                    sh 'gradle jar --info -b build.gradle'
+                    sh 'gradle jar --info build'
                 }
             }
         }
