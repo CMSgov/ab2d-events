@@ -4,7 +4,12 @@ import gov.cms.ab2d.eventlogger.AB2DPostgresqlContainer;
 import gov.cms.ab2d.eventlogger.LoggableEvent;
 import gov.cms.ab2d.eventlogger.SpringBootApp;
 import gov.cms.ab2d.eventlogger.eventloggers.sql.SqlEventLogger;
-import gov.cms.ab2d.eventlogger.events.*;
+import gov.cms.ab2d.eventlogger.events.ApiRequestEvent;
+import gov.cms.ab2d.eventlogger.events.ApiResponseEvent;
+import gov.cms.ab2d.eventlogger.events.ContractSearchEvent;
+import gov.cms.ab2d.eventlogger.events.FileEvent;
+import gov.cms.ab2d.eventlogger.events.JobStatusChangeEvent;
+import gov.cms.ab2d.eventlogger.events.JobSummaryEvent;
 import java.io.File;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -18,12 +23,14 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(classes = SpringBootApp.class)
 @Testcontainers
 class LoggerEventSummaryTest {
-    public static final int ONE_MILL_SEC_IN_NANO = 1000000;
+    public static final int ONE_MillSEC_IN_NANO = 1000000;
 
     @Autowired
     private LoggerEventSummary loggerEventSummary;
@@ -32,7 +39,7 @@ class LoggerEventSummaryTest {
     private SqlEventLogger logger;
 
     @Container
-    private static final PostgreSQLContainer POSTGRE_SQL_CONTAINER = new AB2DPostgresqlContainer();
+    private static final PostgreSQLContainer postgreSQLContainer = new AB2DPostgresqlContainer();
 
     @Test
     void getSummaryBasic() {
@@ -76,9 +83,9 @@ class LoggerEventSummaryTest {
         assertEquals(jobId, summary.getJobId());
         assertEquals(usr, summary.getOrganization());
 
-        assertTrue(Math.abs(firstTime.getNano() - summary.getSubmittedTime().getNano()) < ONE_MILL_SEC_IN_NANO);
-        assertTrue(Math.abs(firstTime.plusDays(1).getNano() - summary.getInProgressTime().getNano()) < ONE_MILL_SEC_IN_NANO);
-        assertTrue(Math.abs(firstTime.plusDays(7).getNano() - summary.getSuccessfulTime().getNano()) < ONE_MILL_SEC_IN_NANO);
+        assertTrue(Math.abs(firstTime.getNano() - summary.getSubmittedTime().getNano()) < ONE_MillSEC_IN_NANO);
+        assertTrue(Math.abs(firstTime.plusDays(1).getNano() - summary.getInProgressTime().getNano()) < ONE_MillSEC_IN_NANO);
+        assertTrue(Math.abs(firstTime.plusDays(7).getNano() - summary.getSuccessfulTime().getNano()) < ONE_MillSEC_IN_NANO);
         assertNull(summary.getCancelledTime());
         assertNull(summary.getFailedTime());
         assertEquals(1, summary.getNumFilesCreated());
@@ -93,7 +100,7 @@ class LoggerEventSummaryTest {
     void getSummaryFailed() {
         OffsetDateTime firstTime = OffsetDateTime.now().minusDays(11);
         JobSummaryEvent summary = getSummaryError("JOBFAIL", "FAILED", firstTime);
-        assertTrue(Math.abs(firstTime.plusDays(7).getNano() - summary.getFailedTime().getNano()) < ONE_MILL_SEC_IN_NANO);
+        assertTrue(Math.abs(firstTime.plusDays(7).getNano() - summary.getFailedTime().getNano()) < ONE_MillSEC_IN_NANO);
         assertNull(summary.getCancelledTime());
     }
 
@@ -101,7 +108,7 @@ class LoggerEventSummaryTest {
     void getSummaryCancelled() {
         OffsetDateTime firstTime = OffsetDateTime.now().minusDays(11);
         JobSummaryEvent summary = getSummaryError("JOBCANCEL", "CANCELLED", firstTime);
-        assertTrue(Math.abs(firstTime.plusDays(7).getNano() - summary.getCancelledTime().getNano()) < ONE_MILL_SEC_IN_NANO);
+        assertTrue(Math.abs(firstTime.plusDays(7).getNano() - summary.getCancelledTime().getNano()) < ONE_MillSEC_IN_NANO);
         assertNull(summary.getFailedTime());
     }
 
@@ -134,8 +141,8 @@ class LoggerEventSummaryTest {
         JobSummaryEvent summary = loggerEventSummary.getSummary(jobId);
         assertEquals(jobId, summary.getJobId());
         assertEquals(usr, summary.getOrganization());
-        assertTrue(Math.abs(firstTime.getNano() - summary.getSubmittedTime().getNano()) < ONE_MILL_SEC_IN_NANO);
-        assertTrue(Math.abs(firstTime.plusDays(1).getNano() - summary.getInProgressTime().getNano()) < ONE_MILL_SEC_IN_NANO);
+        assertTrue(Math.abs(firstTime.getNano() - summary.getSubmittedTime().getNano()) < ONE_MillSEC_IN_NANO);
+        assertTrue(Math.abs(firstTime.plusDays(1).getNano() - summary.getInProgressTime().getNano()) < ONE_MillSEC_IN_NANO);
         assertNull(summary.getSuccessfulTime());
         assertEquals(1, summary.getNumFilesCreated());
         assertEquals(1, summary.getNumFilesDeleted());

@@ -10,7 +10,7 @@ import com.amazonaws.services.kinesisfirehose.model.Record;
 
 public class FauxKinesisFirehose implements AmazonKinesisFirehose {
 
-    private Record latestRecord;
+    public Record latestRecord;
 
     @Override
     public void setEndpoint(String s) {
@@ -92,9 +92,5 @@ public class FauxKinesisFirehose implements AmazonKinesisFirehose {
     @Override
     public ResponseMetadata getCachedResponseMetadata(AmazonWebServiceRequest amazonWebServiceRequest) {
         return null;
-    }
-
-    public Record getLatestRecord() {
-        return latestRecord;
     }
 }
