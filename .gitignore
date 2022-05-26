@@ -31,9 +31,10 @@ secrets.yml
 ### Gradle ###
 .gradle
 .build
+build
 gradlew
 gradlew.bat
-gradle/
+gradle
 
 HELP.md
 target/

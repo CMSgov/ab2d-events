@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 import static gov.cms.ab2d.eventlogger.utils.UtilMethods.hashIt;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.*;
@@ -40,25 +41,27 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(classes = SpringBootApp.class)
 @Testcontainers
 public class AllMapperEventTest {
-    public static final int ONE_MillSEC_IN_NANO = 1000000;
+    public static final int ONE_MILL_SEC_IN_NANO = 1000000;
 
     @Container
-    private static final PostgreSQLContainer postgreSQLContainer = new AB2DPostgresqlContainer();
+    private static final PostgreSQLContainer POSTGRE_SQL_CONTAINER = new AB2DPostgresqlContainer();
 
     @Autowired
-    SqlEventLogger sqlEventLogger;
+    private SqlEventLogger sqlEventLogger;
 
     @Autowired
     private LoggerEventRepository loggerEventRepository;
 
     @TempDir
-    Path tmpDir;
+    private Path tmpDir;
 
     @Mock
-    NamedParameterJdbcTemplate template;
+    private NamedParameterJdbcTemplate template;
 
     @BeforeEach
-    void setUp() {MockitoAnnotations.openMocks(this); }
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @AfterEach
     public void init() {
@@ -114,7 +117,7 @@ public class AllMapperEventTest {
         assertEquals(event.getId(), jsce.getId());
         assertEquals("laila", event.getOrganization());
         assertEquals("job123", event.getJobId());
-        assertTrue(Math.abs(val.getNano() - event.getTimeOfEvent().getNano()) < ONE_MillSEC_IN_NANO);
+        assertTrue(Math.abs(val.getNano() - event.getTimeOfEvent().getNano()) < ONE_MILL_SEC_IN_NANO);
         assertEquals("http://localhost", event.getUrl());
         assertEquals("127.0.0.1", event.getIpAddress());
         assertEquals(hashIt("token"), event.getTokenHash());
@@ -199,7 +202,7 @@ public class AllMapperEventTest {
         assertEquals(1, event.getEobFiles());
 
 
-        assertTrue(Math.abs(val.getNano() - event.getTimeOfEvent().getNano()) < ONE_MillSEC_IN_NANO);
+        assertTrue(Math.abs(val.getNano() - event.getTimeOfEvent().getNano()) < ONE_MILL_SEC_IN_NANO);
         loggerEventRepository.delete(ContractSearchEvent.class);
         events = loggerEventRepository.load(ContractSearchEvent.class);
         assertEquals(0, events.size());
@@ -251,7 +254,7 @@ public class AllMapperEventTest {
         assertEquals(event.getId(), jsce.getId());
         assertEquals("laila", event.getOrganization());
         assertEquals("job123", event.getJobId());
-        assertTrue(Math.abs(val.getNano() - event.getTimeOfEvent().getNano()) < ONE_MillSEC_IN_NANO);
+        assertTrue(Math.abs(val.getNano() - event.getTimeOfEvent().getNano()) < ONE_MILL_SEC_IN_NANO);
         assertEquals(ErrorEvent.ErrorType.CONTRACT_NOT_FOUND, event.getErrorType());
         assertEquals("Description", event.getDescription());
         loggerEventRepository.delete(ErrorEvent.class);
@@ -288,7 +291,7 @@ public class AllMapperEventTest {
         assertEquals(event.getId(), jsce.getId());
         assertEquals("laila", event.getOrganization());
         assertEquals("job123", event.getJobId());
-        assertTrue(Math.abs(val.getNano() - event.getTimeOfEvent().getNano()) < ONE_MillSEC_IN_NANO);
+        assertTrue(Math.abs(val.getNano() - event.getTimeOfEvent().getNano()) < ONE_MILL_SEC_IN_NANO);
         assertEquals(hash, event.getFileHash());
         assertFalse(hash.isEmpty());
         assertEquals(tmpDir.toString() + "/testFile", event.getFileName());
@@ -325,7 +328,7 @@ public class AllMapperEventTest {
         assertEquals(event.getId(), jsce.getId());
         assertEquals("laila", event.getOrganization());
         assertEquals("job123", event.getJobId());
-        assertTrue(Math.abs(val.getNano() - event.getTimeOfEvent().getNano()) < ONE_MillSEC_IN_NANO);
+        assertTrue(Math.abs(val.getNano() - event.getTimeOfEvent().getNano()) < ONE_MILL_SEC_IN_NANO);
         assertEquals("FAILED", event.getNewStatus());
         assertEquals("IN_PROGRESS", event.getOldStatus());
         assertEquals("Description", event.getDescription());
@@ -362,7 +365,7 @@ public class AllMapperEventTest {
         assertEquals("filename", event.getFileName());
         assertEquals(10, event.getNumberLoaded());
         assertEquals(ReloadEvent.FileType.CONTRACT_MAPPING, event.getFileType());
-        assertTrue(Math.abs(val.getNano() - event.getTimeOfEvent().getNano()) < ONE_MillSEC_IN_NANO);
+        assertTrue(Math.abs(val.getNano() - event.getTimeOfEvent().getNano()) < ONE_MILL_SEC_IN_NANO);
         loggerEventRepository.delete(ReloadEvent.class);
         events = loggerEventRepository.load(ReloadEvent.class);
         assertEquals(0, events.size());
@@ -411,4 +414,5 @@ public class AllMapperEventTest {
         loggerEventRepository.delete(JobStatusChangeEvent.class);
         events = loggerEventRepository.load(JobStatusChangeEvent.class);
         assertEquals(0, events.size());
-    }}
+    }
+}
