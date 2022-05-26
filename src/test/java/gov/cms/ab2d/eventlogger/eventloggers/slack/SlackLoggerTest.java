@@ -4,7 +4,6 @@ import com.slack.api.Slack;
 import com.slack.api.webhook.Payload;
 import com.slack.api.webhook.WebhookResponse;
 import gov.cms.ab2d.eventlogger.Ab2dEnvironment;
-import gov.cms.ab2d.eventlogger.LoggableEvent;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
