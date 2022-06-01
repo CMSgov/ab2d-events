@@ -16,8 +16,8 @@ public class AB2DLocalstackContainer extends LocalStackContainer {
 
     @Override
     public void start() {
-        System.setProperty("cloud.aws.stack.auto","false");
-        System.setProperty("cloud.aws.region.static","us-east-1");
+        System.setProperty("cloud.aws.stack.auto", "false");
+        System.setProperty("cloud.aws.region.static", "us-east-1");
         System.setProperty("com.amazonaws.sdk.disableCertChecking", "");
         super.withServices(Service.SQS);
         super.start();
@@ -25,8 +25,8 @@ public class AB2DLocalstackContainer extends LocalStackContainer {
                 "localhost:" + this.getMappedPort(EnabledService.named("SQS").getPort()));
     }
 
-    @Override
-    public void stop() {
-        // Don't call stop between shutdown for now
-    }
+//    @Override
+//    public void stop() {
+//        // Don't call stop between shutdown for now
+//    }
 }

@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 @Service
-@PropertySource("classpath:application.eventlogger.properties")
+@PropertySource("classpath:application.properties")
 @SuppressWarnings("java:S2142") //java:S2142: "InterruptedException" should not be ignored
 @Slf4j
 public class KinesisEventLogger implements EventLogger {

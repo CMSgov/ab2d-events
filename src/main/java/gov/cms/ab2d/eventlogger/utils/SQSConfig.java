@@ -8,11 +8,17 @@ import com.amazonaws.services.sqs.AmazonSQSAsync;
 import com.amazonaws.services.sqs.AmazonSQSAsyncClientBuilder;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.amazonaws.services.sqs.model.QueueDoesNotExistException;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.aws.messaging.config.QueueMessageHandlerFactory;
 import org.springframework.cloud.aws.messaging.core.QueueMessagingTemplate;
 import org.springframework.cloud.aws.messaging.support.NotificationMessageArgumentResolver;
@@ -24,9 +30,6 @@ import org.springframework.messaging.converter.MessageConverter;
 
 @Configuration
 @Slf4j
-@ConditionalOnProperty(
-        name = "sqs.enabled",
-        havingValue = "true")
 public class SQSConfig {
     public static final String EVENTS_QUEUE = "ab2d-events";
 
@@ -38,7 +41,7 @@ public class SQSConfig {
 
     private AWSStaticCredentialsProvider credentials;
 
-    public SQSConfig(@Value("${cloud.aws.credentials.access-key}") String access, @Value("${cloud.aws.credentials.secret-key}")String secret,  @Value("${cloud.aws.region.static}")String region, @Value("${cloud.aws.end-point.uri}")String url) {
+    public SQSConfig(@Value("${cloud.aws.credentials.access-key}") String access, @Value("${cloud.aws.credentials.secret-key}") String secret, @Value("${cloud.aws.region.static}") String region, @Value("${cloud.aws.end-point.uri}") String url) {
         this.region = region;
         this.url = url;
         this.credentials = new AWSStaticCredentialsProvider(new BasicAWSCredentials(access, secret));
@@ -49,9 +52,10 @@ public class SQSConfig {
             AmazonSQSAsync amazonSQSAsync) {
         return new QueueMessagingTemplate(amazonSQSAsync);
     }
+
     @Bean
     public AmazonSQSAsync amazonSQSAsync() {
-        log.info("Locakstack url" + url);
+        log.info("Locakstack url " + url);
         if (null != url) {
             return (AmazonSQSAsync) createQueue(AmazonSQSAsyncClientBuilder
                     .standard()
@@ -82,7 +86,7 @@ public class SQSConfig {
 
     @Primary
     @Bean
-    public SendSQSEvent amazonSQS(AmazonSQS amazonSQS, ObjectMapper objectMapper) {
+    public SendSQSEvent amazonSQS(AmazonSQS amazonSQS, ObjectMapper objectMapper) throws JsonProcessingException {
         return new SendSQSEvent(amazonSQS, objectMapper);
     }
 
@@ -93,21 +97,22 @@ public class SQSConfig {
         return factory;
     }
 
-//    @Bean(name="sqsMapper")
-//    protected ObjectMapper objectMapper() {
-//        ObjectMapper objectMapper = new ObjectMapper();
-////        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-////        objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-////        objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.WRAPPER_ARRAY);
-//        return objectMapper;
-//    }
+    @Bean
+    protected ObjectMapper objectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+        objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.WRAPPER_ARRAY);
+        return objectMapper;
+    }
 
     @Bean
     protected MessageConverter messageConverter(ObjectMapper objectMapper) {
-//        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-//        objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-//        objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.WRAPPER_ARRAY);
-//
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+        objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.WRAPPER_ARRAY);
+
         MappingJackson2MessageConverter jacksonMessageConverter = new MappingJackson2MessageConverter();
         jacksonMessageConverter.setObjectMapper(objectMapper);
         jacksonMessageConverter.setSerializedPayloadClass(String.class);
@@ -119,10 +124,10 @@ public class SQSConfig {
     private AmazonSQS createQueue(AmazonSQS amazonSQS) {
         try {
             amazonSQS.getQueueUrl(EVENTS_QUEUE);
-            log.info(" already exists");
+            log.info("Queue already exists");
         } catch (QueueDoesNotExistException e) {
             amazonSQS.createQueue(EVENTS_QUEUE);
-            log.info(" created");
+            log.info("Queue created");
         }
         return amazonSQS;
     }
