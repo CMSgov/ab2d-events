@@ -1,4 +1,4 @@
-package gov.cms.ab2d.eventlogger;
+package gov.cms.ab2d.eventlogger.utils;
 
 import org.testcontainers.containers.PostgreSQLContainer;
 
