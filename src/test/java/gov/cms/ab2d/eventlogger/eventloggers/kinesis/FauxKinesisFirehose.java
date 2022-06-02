@@ -9,6 +9,7 @@ import com.amazonaws.services.kinesisfirehose.model.*;
 import com.amazonaws.services.kinesisfirehose.model.Record;
 
 public class FauxKinesisFirehose implements AmazonKinesisFirehose {
+
     private Record latestRecord;
 
     @Override
