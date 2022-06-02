@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@PropertySource("classpath:application.eventlogger.properties")
+@PropertySource("classpath:application.properties")
 @Slf4j
 public class SqlEventLogger implements EventLogger {
 

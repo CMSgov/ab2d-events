@@ -5,6 +5,8 @@ import gov.cms.ab2d.eventlogger.eventloggers.slack.SlackLogger;
 import gov.cms.ab2d.eventlogger.eventloggers.sql.SqlEventLogger;
 import gov.cms.ab2d.eventlogger.events.ErrorEvent;
 import gov.cms.ab2d.eventlogger.reports.sql.LoggerEventRepository;
+import gov.cms.ab2d.eventlogger.utils.AB2DLocalstackContainer;
+import gov.cms.ab2d.eventlogger.utils.AB2DPostgresqlContainer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,11 +24,14 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest(classes = SpringBootApp.class)
+@SpringBootTest
 @Testcontainers
 class LogManagerTest {
     @Container
     private static final PostgreSQLContainer POSTGRE_SQL_CONTAINER = new AB2DPostgresqlContainer();
+
+    @Container
+    private static final AB2DLocalstackContainer LOCALSTACK_SQL_CONTAINER = new AB2DLocalstackContainer();
 
     private LogManager logManager;
 
@@ -95,7 +100,6 @@ class LogManagerTest {
         assertEquals(1, events.size());
         ErrorEvent savedEvent = (ErrorEvent) events.get(0);
         assertEquals("aws1111", savedEvent.getAwsId());
-
 
         verify(slackLogger, times(1)).logAlert(any(LoggableEvent.class), any());
     }

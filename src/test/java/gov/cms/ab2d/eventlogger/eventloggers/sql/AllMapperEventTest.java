@@ -1,11 +1,26 @@
 package gov.cms.ab2d.eventlogger.eventloggers.sql;
 
-import gov.cms.ab2d.eventlogger.AB2DPostgresqlContainer;
+import gov.cms.ab2d.eventlogger.utils.AB2DPostgresqlContainer;
 import gov.cms.ab2d.eventlogger.EventLoggingException;
 import gov.cms.ab2d.eventlogger.LoggableEvent;
 import gov.cms.ab2d.eventlogger.SpringBootApp;
-import gov.cms.ab2d.eventlogger.events.*;
+import gov.cms.ab2d.eventlogger.events.ApiRequestEvent;
+import gov.cms.ab2d.eventlogger.events.ApiResponseEvent;
+import gov.cms.ab2d.eventlogger.events.BeneficiarySearchEvent;
+import gov.cms.ab2d.eventlogger.events.ContractSearchEvent;
+import gov.cms.ab2d.eventlogger.events.ErrorEvent;
+import gov.cms.ab2d.eventlogger.events.FileEvent;
+import gov.cms.ab2d.eventlogger.events.JobStatusChangeEvent;
+import gov.cms.ab2d.eventlogger.events.ReloadEvent;
 import gov.cms.ab2d.eventlogger.reports.sql.LoggerEventRepository;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,19 +39,14 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 
 import static gov.cms.ab2d.eventlogger.utils.UtilMethods.hashIt;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(classes = SpringBootApp.class)
 @Testcontainers

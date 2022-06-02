@@ -22,7 +22,7 @@ public enum Ab2dEnvironment {
 
     public static final List<Ab2dEnvironment> PUBLIC_LIST = List.of(PRODUCTION, SANDBOX);
 
-    // Name typically expected in application.eventlogger.properties config
+    // Name typically expected in application.properties config
     // or passed in as env variable during startup
     private final String name;
 

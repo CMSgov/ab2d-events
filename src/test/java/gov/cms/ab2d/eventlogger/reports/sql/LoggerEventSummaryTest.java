@@ -1,10 +1,15 @@
 package gov.cms.ab2d.eventlogger.reports.sql;
 
-import gov.cms.ab2d.eventlogger.AB2DPostgresqlContainer;
+import gov.cms.ab2d.eventlogger.utils.AB2DPostgresqlContainer;
 import gov.cms.ab2d.eventlogger.LoggableEvent;
 import gov.cms.ab2d.eventlogger.SpringBootApp;
 import gov.cms.ab2d.eventlogger.eventloggers.sql.SqlEventLogger;
-import gov.cms.ab2d.eventlogger.events.*;
+import gov.cms.ab2d.eventlogger.events.ApiRequestEvent;
+import gov.cms.ab2d.eventlogger.events.ApiResponseEvent;
+import gov.cms.ab2d.eventlogger.events.ContractSearchEvent;
+import gov.cms.ab2d.eventlogger.events.FileEvent;
+import gov.cms.ab2d.eventlogger.events.JobStatusChangeEvent;
+import gov.cms.ab2d.eventlogger.events.JobSummaryEvent;
 import java.io.File;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -18,7 +23,9 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(classes = SpringBootApp.class)
 @Testcontainers

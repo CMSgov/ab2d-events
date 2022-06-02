@@ -134,7 +134,7 @@ public abstract class LoggableEvent {
         String thisUser = this.getOrganization();
         String otherUser = other.getOrganization();
         if (thisUser == null) {
-        if (otherUser != null) {
+            if (otherUser != null) {
                 return false;
             }
         } else if (!thisUser.equals(otherUser)) {
