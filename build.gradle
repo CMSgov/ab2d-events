@@ -2,7 +2,8 @@ import groovy.time.TimeCategory
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 plugins {
-    id 'java-library'
+    id 'org.springframework.boot' version '2.6.3'
+    id 'java'
     id 'com.jfrog.artifactory' version '4.27.1' apply false
     id "org.sonarqube" version "3.3"
     id "gov.cms.ab2d.plugin" version "0.0.1-SNAPSHOT"
