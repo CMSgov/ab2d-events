@@ -19,10 +19,9 @@ public class EventsListener {
         this.logManager = logManager;
     }
 
-    @SqsListener(value = "ab2d-events", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
-    public void processEvents(LoggableEvent loggableEvent, @NotNull Acknowledgment ack) {
+    @SqsListener(value = "ab2d-events", deletionPolicy = SqsMessageDeletionPolicy.ON_SUCCESS)
+    public void processEvents(LoggableEvent loggableEvent) {
         log.info("EventsListener: Processing events from SQS: " + loggableEvent);
         logManager.log(loggableEvent);
-        ack.acknowledge();
     }
 }
