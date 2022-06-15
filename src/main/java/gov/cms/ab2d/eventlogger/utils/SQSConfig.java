@@ -109,10 +109,6 @@ public class SQSConfig {
 
     @Bean
     protected MessageConverter messageConverter(ObjectMapper objectMapper) {
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-        objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.WRAPPER_ARRAY);
-
         MappingJackson2MessageConverter jacksonMessageConverter = new MappingJackson2MessageConverter();
         jacksonMessageConverter.setObjectMapper(objectMapper);
         jacksonMessageConverter.setSerializedPayloadClass(String.class);
