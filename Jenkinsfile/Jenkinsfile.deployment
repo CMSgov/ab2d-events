@@ -14,21 +14,12 @@ pipeline {
 
     stages {
 
-        stage ('Build files') {
-            steps {
-                 {
-                    sh 'gradle bootJar'
-                }
-            }
+        stage ('Build files') 
+             sh 'gradle bootJar'
+               
         
         stage ('Build Docker Image')
-            steps  {
-                sh '''
-                ./scripts/build-docker-image.sh
-                '''
-            }
-
-        }
+            sh ' ./scripts/build-docker-image.sh'
 
     }
 }
