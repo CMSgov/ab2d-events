@@ -12,6 +12,6 @@ pluginManagement {
     }
 }
 
-rootProject.buildFileName = 'build.gradle'
+rootProject.buildFileName = 'ab2d-event'
 
 
