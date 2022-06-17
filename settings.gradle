@@ -12,4 +12,6 @@ pluginManagement {
     }
 }
 
+rootProject.buildFileName = 'build.gradle.kts'
+
 rootProject.name = 'ab2d-event'
