@@ -13,27 +13,15 @@ pipeline {
     }
 
     stages {
-<<<<<<< HEAD
 
-        tages {
-=======
->>>>>>> c6c09af70fd193f7973286c47ddb7e74a291464c
          stage ('Build Libraries') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'artifactoryuserpass', usernameVariable: 'ARTIFACTORY_USER', passwordVariable: 'ARTIFACTORY_PASSWORD')]) {
                     sh 'gradle -b build.gradle bootJar '
                 }
             }
-        }
-<<<<<<< HEAD
-               
         
-        stage ('Build Docker Image')
-            sh ' ./scripts/build-docker-image.sh'
 
-    }
-}
-=======
                 
         stage ('Build Docker Image') {
             steps {
@@ -41,6 +29,6 @@ pipeline {
             }
          }
 
-    }
+    
 }
->>>>>>> c6c09af70fd193f7973286c47ddb7e74a291464c
+
