@@ -13,8 +13,11 @@ pipeline {
     }
 
     stages {
+<<<<<<< HEAD
 
         tages {
+=======
+>>>>>>> c6c09af70fd193f7973286c47ddb7e74a291464c
          stage ('Build Libraries') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'artifactoryuserpass', usernameVariable: 'ARTIFACTORY_USER', passwordVariable: 'ARTIFACTORY_PASSWORD')]) {
@@ -22,6 +25,7 @@ pipeline {
                 }
             }
         }
+<<<<<<< HEAD
                
         
         stage ('Build Docker Image')
@@ -29,3 +33,14 @@ pipeline {
 
     }
 }
+=======
+                
+        stage ('Build Docker Image') {
+            steps {
+            sh ' ./scripts/build-docker-image.sh'
+            }
+         }
+
+    }
+}
+>>>>>>> c6c09af70fd193f7973286c47ddb7e74a291464c
