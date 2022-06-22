@@ -1,0 +1,31 @@
+pipeline {
+    environment {
+        ARTIFACTORY_URL = credentials('ARTIFACTORY_URL')
+    }
+
+    agent {
+        label 'build'
+    }
+
+    tools {
+        gradle "gradle-7.2"
+        jdk 'openjdk17'
+    }
+
+    stages {
+
+        tages {
+         stage ('Build Libraries') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'artifactoryuserpass', usernameVariable: 'ARTIFACTORY_USER', passwordVariable: 'ARTIFACTORY_PASSWORD')]) {
+                    sh 'gradle -b build.gradle bootJar '
+                }
+            }
+        }
+               
+        
+        stage ('Build Docker Image')
+            sh ' ./scripts/build-docker-image.sh'
+
+    }
+}

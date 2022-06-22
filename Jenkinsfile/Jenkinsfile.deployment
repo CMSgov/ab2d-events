@@ -14,40 +14,12 @@ pipeline {
 
     stages {
 
-        stage ('Build files') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'artifactoryuserpass', usernameVariable: 'ARTIFACTORY_USER', passwordVariable: 'ARTIFACTORY_PASSWORD')]) {
-                    sh 'gradle bootJar'
-                }
-            }
-        }
+        stage ('Build files') 
+             sh 'gradle bootJar'
+               
+        
         stage ('Build Docker Image')
-            steps {
-                sh '''
-                ./scripts/build-docker-image.sh
-                '''
-            }
+            sh ' ./scripts/build-docker-image.sh'
 
-        
-        stage('Publish Docker Images') {
-      
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'artifactoryuserpass', usernameVariable: 'ARTIFACTORY_USER', passwordVariable: 'ARTIFACTORY_PASSWORD')]) {
-          script {
-            sh '''
-              if [ -z ${ARTIFACTORY_PASSWORD+x} ]; then echo "var is unset"; else echo "var is set"; fi
-
-
-              . ./scripts/deployment/profiles/${DEPLOYMENT_ENV}.sh
-              . ./venv/bin/activate
-              . ./scripts/deployment/download-repo.sh ab2d
-              ./scripts/deployment/publish-docker-images.sh
-            '''
-          }
-        }
-      }
-    }
-
-        
     }
 }
