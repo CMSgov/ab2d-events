@@ -16,7 +16,7 @@ pipeline {
 
         stage ('Build files') {
            steps {
-             sh 'gradle jar' 
+             sh './gradlew bootJar' 
              }
          }
                
