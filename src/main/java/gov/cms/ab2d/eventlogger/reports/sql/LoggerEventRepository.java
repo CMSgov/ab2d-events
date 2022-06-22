@@ -1,6 +1,7 @@
 package gov.cms.ab2d.eventlogger.reports.sql;
 
-import gov.cms.ab2d.eventlogger.LoggableEvent;
+
+import gov.cms.ab2d.eventlibs.events.LoggableEvent;
 import gov.cms.ab2d.eventlogger.eventloggers.sql.SqlMapperConfig;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;

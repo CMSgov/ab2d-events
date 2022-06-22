@@ -1,8 +1,9 @@
 package gov.cms.ab2d.eventlogger.eventloggers.sql;
 
+import gov.cms.ab2d.eventlibs.events.ErrorEvent;
+import gov.cms.ab2d.eventlibs.events.LoggableEvent;
 import gov.cms.ab2d.eventlogger.EventLoggingException;
-import gov.cms.ab2d.eventlogger.LoggableEvent;
-import gov.cms.ab2d.eventlogger.events.ErrorEvent;
+
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;

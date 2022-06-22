@@ -1,11 +1,12 @@
 package gov.cms.ab2d.eventlogger.reports.sql;
 
-import gov.cms.ab2d.eventlogger.LoggableEvent;
-import gov.cms.ab2d.eventlogger.events.JobSummaryEvent;
-import gov.cms.ab2d.eventlogger.events.JobStatusChangeEvent;
-import gov.cms.ab2d.eventlogger.events.FileEvent;
-import gov.cms.ab2d.eventlogger.events.ApiResponseEvent;
-import gov.cms.ab2d.eventlogger.events.ContractSearchEvent;
+
+import gov.cms.ab2d.eventlibs.events.ApiResponseEvent;
+import gov.cms.ab2d.eventlibs.events.ContractSearchEvent;
+import gov.cms.ab2d.eventlibs.events.FileEvent;
+import gov.cms.ab2d.eventlibs.events.JobStatusChangeEvent;
+import gov.cms.ab2d.eventlibs.events.JobSummaryEvent;
+import gov.cms.ab2d.eventlibs.events.LoggableEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

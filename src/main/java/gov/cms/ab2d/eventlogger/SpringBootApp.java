@@ -3,7 +3,7 @@ package gov.cms.ab2d.eventlogger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication(
-        scanBasePackages = {"gov.cms.ab2d.eventlogger"},
+        scanBasePackages = {"gov.cms.ab2d.eventlogger", "gov.cms.ab2d.eventlibs"},
         exclude = {
                 org.springframework.cloud.aws.autoconfigure.context.ContextInstanceDataAutoConfiguration.class,
                 org.springframework.cloud.aws.autoconfigure.context.ContextStackAutoConfiguration.class,

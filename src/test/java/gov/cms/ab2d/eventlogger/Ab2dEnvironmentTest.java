@@ -1,13 +1,13 @@
 package gov.cms.ab2d.eventlogger;
 
 
+import gov.cms.ab2d.eventlibs.config.Ab2dEnvironment;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class Ab2dEnvironmentTest {
-
     @Test
     public void canProcessAllEnvironments() {
         Ab2dEnvironment env = Ab2dEnvironment.fromName("ab2d-dev");
