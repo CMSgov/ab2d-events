@@ -32,6 +32,13 @@ else # [ "${CLOUD_TAMER}" == "true" ]
   source "./scripts/fn_get_temporary_aws_credentials_via_cloudtamer_api.sh"
 
 fi
+
+if [ "${CLOUD_TAMER}" = "true" ]; then
+  fn_get_temporary_aws_credentials_via_cloudtamer_api "${ECR_REPO_ENV_AWS_ACCOUNT_NUMBER}" "${ECR_REPO_ENV}"
+else
+  fn_get_temporary_aws_credentials_via_aws_sts_assume_role "${ECR_REPO_ENV_AWS_ACCOUNT_NUMBER}" "${ECR_REPO_ENV}"
+fi
+
 echo Logging in to Amazon ECR...
 aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
 #export REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME
