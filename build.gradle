@@ -35,3 +35,7 @@ allprojects {
         testImplementation 'org.testcontainers:localstack:1.17.2'
     }
 }
+
+repositories {
+    mavenCentral()
+}
