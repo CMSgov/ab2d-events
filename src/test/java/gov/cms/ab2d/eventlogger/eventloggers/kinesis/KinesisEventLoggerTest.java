@@ -17,6 +17,7 @@ import gov.cms.ab2d.eventclient.events.FileEvent;
 import gov.cms.ab2d.eventclient.events.JobStatusChangeEvent;
 import gov.cms.ab2d.eventclient.events.LoggableEvent;
 import gov.cms.ab2d.eventclient.events.ReloadEvent;
+import gov.cms.ab2d.eventlogger.utils.AB2DLocalstackContainer;
 import gov.cms.ab2d.eventlogger.utils.AB2DPostgresqlContainer;
 import gov.cms.ab2d.eventlogger.SpringBootApp;
 import java.io.IOException;
@@ -54,6 +55,9 @@ import static org.mockito.Mockito.doReturn;
 class KinesisEventLoggerTest {
     @Container
     private static final PostgreSQLContainer POSTGRE_SQL_CONTAINER = new AB2DPostgresqlContainer();
+
+    @Container
+    private static final AB2DLocalstackContainer LOCALSTACK_CONTAINER = new AB2DLocalstackContainer();
 
     @Autowired
     private Ab2dEnvironment environment;
