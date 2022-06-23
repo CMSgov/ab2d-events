@@ -17,7 +17,7 @@ pipeline {
         stage ('Build files') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'artifactoryuserpass', usernameVariable: 'ARTIFACTORY_USER', passwordVariable: 'ARTIFACTORY_PASSWORD')]) {
-                    sh 'gradle build'
+                    sh 'gradle build -x test'
                 }
             }
         }
