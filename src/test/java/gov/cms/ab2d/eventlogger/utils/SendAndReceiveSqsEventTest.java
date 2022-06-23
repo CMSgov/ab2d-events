@@ -2,10 +2,13 @@ package gov.cms.ab2d.eventlogger.utils;
 
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import gov.cms.ab2d.eventclient.clients.SQSEventClient;
+import gov.cms.ab2d.eventclient.events.ApiRequestEvent;
+import gov.cms.ab2d.eventclient.events.ApiResponseEvent;
+import gov.cms.ab2d.eventclient.events.LoggableEvent;
 import gov.cms.ab2d.eventlogger.LogManager;
-import gov.cms.ab2d.eventlogger.LoggableEvent;
-import gov.cms.ab2d.eventlogger.events.ApiRequestEvent;
-import gov.cms.ab2d.eventlogger.events.ApiResponseEvent;
+
+
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -18,7 +21,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 
-import static gov.cms.ab2d.eventlogger.utils.SQSConfig.EVENTS_QUEUE;
+import static gov.cms.ab2d.eventclient.clients.SQSConfig.EVENTS_QUEUE;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 
@@ -34,7 +37,7 @@ public class SendAndReceiveSqsEventTest {
     private static final AB2DLocalstackContainer LOCALSTACK_CONTAINER = new AB2DLocalstackContainer();
 
     @Autowired
-    private SendSQSEvent sendSQSEvent;
+    private SQSEventClient sendSQSEvent;
 
     @Autowired
     private AmazonSQS amazonSQS;
@@ -60,6 +63,7 @@ public class SendAndReceiveSqsEventTest {
 
         //timeout needed because the sqs listener (that uses logManager) is a separate process.
         verify(logManager, timeout(1000).times(2)).log(captor.capture());
+
 
         List<LoggableEvent> loggedApiRequestEvent = captor.getAllValues();
         Assertions.assertEquals(sentApiRequestEvent, loggedApiRequestEvent.get(0));
