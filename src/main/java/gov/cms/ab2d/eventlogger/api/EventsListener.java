@@ -2,7 +2,6 @@ package gov.cms.ab2d.eventlogger.api;
 
 import gov.cms.ab2d.eventclient.events.LoggableEvent;
 import gov.cms.ab2d.eventlogger.LogManager;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.aws.messaging.listener.SqsMessageDeletionPolicy;
 import org.springframework.cloud.aws.messaging.listener.annotation.SqsListener;
@@ -18,7 +17,7 @@ public class EventsListener {
         this.logManager = logManager;
     }
 
-    @SqsListener(value = "ab2d-events", deletionPolicy = SqsMessageDeletionPolicy.NEVER)
+    @SqsListener(value = "ab2d-events", deletionPolicy = SqsMessageDeletionPolicy.ON_SUCCESS)
     public void processEvents(LoggableEvent loggableEvent) {
         log.info("EventsListener: Processing events from SQS: " + loggableEvent);
         logManager.log(loggableEvent);
