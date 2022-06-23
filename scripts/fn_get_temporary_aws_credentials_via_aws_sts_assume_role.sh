@@ -1,4 +1,5 @@
 # Define get temporary AWS credentials via AWS STS assume role
+echo "getting temporary AWS credentials via AWS STS assume role"
 
 fn_get_temporary_aws_credentials_via_aws_sts_assume_role ()
 {
