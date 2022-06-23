@@ -1,7 +1,8 @@
 package gov.cms.ab2d.eventlogger;
 
 
-import gov.cms.ab2d.eventlibs.config.Ab2dEnvironment;
+
+import gov.cms.ab2d.eventclient.config.Ab2dEnvironment;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

@@ -1,7 +1,8 @@
 package gov.cms.ab2d.eventlogger.eventloggers.sql;
 
-import gov.cms.ab2d.eventlibs.config.Ab2dEnvironment;
-import gov.cms.ab2d.eventlibs.events.LoggableEvent;
+
+import gov.cms.ab2d.eventclient.config.Ab2dEnvironment;
+import gov.cms.ab2d.eventclient.events.LoggableEvent;
 import gov.cms.ab2d.eventlogger.EventLogger;
 import gov.cms.ab2d.eventlogger.EventLoggingException;
 import lombok.extern.slf4j.Slf4j;

@@ -5,9 +5,9 @@ import com.slack.api.model.block.SectionBlock;
 import com.slack.api.model.block.composition.MarkdownTextObject;
 import com.slack.api.webhook.Payload;
 import com.slack.api.webhook.WebhookResponse;
-import gov.cms.ab2d.eventlibs.config.Ab2dEnvironment;
-import gov.cms.ab2d.eventlibs.events.LoggableEvent;
 
+import gov.cms.ab2d.eventclient.config.Ab2dEnvironment;
+import gov.cms.ab2d.eventclient.events.LoggableEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,12 +1,12 @@
 package gov.cms.ab2d.eventlogger.reports.sql;
 
-import gov.cms.ab2d.eventlibs.events.ApiRequestEvent;
-import gov.cms.ab2d.eventlibs.events.ApiResponseEvent;
-import gov.cms.ab2d.eventlibs.events.ContractSearchEvent;
-import gov.cms.ab2d.eventlibs.events.FileEvent;
-import gov.cms.ab2d.eventlibs.events.JobStatusChangeEvent;
-import gov.cms.ab2d.eventlibs.events.JobSummaryEvent;
-import gov.cms.ab2d.eventlibs.events.LoggableEvent;
+import gov.cms.ab2d.eventclient.events.ApiRequestEvent;
+import gov.cms.ab2d.eventclient.events.ApiResponseEvent;
+import gov.cms.ab2d.eventclient.events.ContractSearchEvent;
+import gov.cms.ab2d.eventclient.events.FileEvent;
+import gov.cms.ab2d.eventclient.events.JobStatusChangeEvent;
+import gov.cms.ab2d.eventclient.events.JobSummaryEvent;
+import gov.cms.ab2d.eventclient.events.LoggableEvent;
 import gov.cms.ab2d.eventlogger.utils.AB2DPostgresqlContainer;
 
 import gov.cms.ab2d.eventlogger.SpringBootApp;

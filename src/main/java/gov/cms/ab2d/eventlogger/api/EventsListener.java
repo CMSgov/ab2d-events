@@ -1,6 +1,6 @@
 package gov.cms.ab2d.eventlogger.api;
 
-import gov.cms.ab2d.eventlibs.events.LoggableEvent;
+import gov.cms.ab2d.eventclient.events.LoggableEvent;
 import gov.cms.ab2d.eventlogger.LogManager;
 
 import lombok.extern.slf4j.Slf4j;
