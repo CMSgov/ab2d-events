@@ -1,4 +1,35 @@
 #!/bin/sh
+
+
+ECR_REPO_ENV_AWS_ACCOUNT_NUMBER=$ECR_REPO_ENV_AWS_ACCOUNT_NUMBER
+ECR_REPO_ENV=$ECR_REPO_ENV
+DEPLOYMENT_ENV=$DEPLOYMENT_ENV
+
+
+if [ "${CLOUD_TAMER}" != "false" ] && [ "${CLOUD_TAMER}" != "true" ]; then
+  echo "ERROR: CLOUD_TAMER parameter must be true or false"
+  exit 1
+elif [ "${CLOUD_TAMER}" = "false" ]; then
+
+  # Turn off verbose logging for Jenkins jobs
+  set +x
+  echo "Don't print commands and their arguments as they are executed."
+  CLOUD_TAMER="${CLOUD_TAMER}"
+
+  # Import the "get temporary AWS credentials via AWS STS assume role" function
+  source "./scripts/fn_get_temporary_aws_credentials_via_aws_sts_assume_role.sh"
+
+else # [ "${CLOUD_TAMER}" == "true" ]
+
+  # Turn on verbose logging for development machine testing
+  set -x
+  echo "Print commands and their arguments as they are executed."
+  CLOUD_TAMER="${CLOUD_TAMER}"
+
+  # Import the "get temporary AWS credentials via CloudTamer API" function
+  source "./scripts/fn_get_temporary_aws_credentials_via_cloudtamer_api.sh"
+
+fi
 echo Logging in to Amazon ECR...
 aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
 #export REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME
