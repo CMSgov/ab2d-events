@@ -6,4 +6,4 @@ CMD java \
     -XX:+UseContainerSupport \
     -jar ab2d-event.jar
 
-EXPOSE 8080
+EXPOSE 8050
