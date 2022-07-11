@@ -31,6 +31,7 @@ public class SendAndReceiveSqsEventTest {
 
     static {
         System.setProperty("spring.liquibase.enabled", "false");
+        System.setProperty("feature.sqs.enabled:false", "true");
     }
 
     @Container
@@ -58,8 +59,8 @@ public class SendAndReceiveSqsEventTest {
         ApiRequestEvent sentApiRequestEvent = new ApiRequestEvent("organization", "jobId", "url", "ipAddress", "token", "requestId");
         ApiResponseEvent sentApiResponseEvent = new ApiResponseEvent("organization", "jobId", HttpStatus.I_AM_A_TEAPOT, "ipAddress", "token", "requestId");
 
-        sendSQSEvent.send(sentApiRequestEvent);
-        sendSQSEvent.send(sentApiResponseEvent);
+        sendSQSEvent.sendLogs(sentApiRequestEvent);
+        sendSQSEvent.sendLogs(sentApiResponseEvent);
 
         //timeout needed because the sqs listener (that uses logManager) is a separate process.
         verify(logManager, timeout(1000).times(2)).log(captor.capture());
