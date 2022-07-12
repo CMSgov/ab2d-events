@@ -20,6 +20,7 @@ public class SendSQSFeatureFlagTest {
 
     static {
         System.setProperty("spring.liquibase.enabled", "false");
+        System.setProperty("feature.sqs.enabled", "false");
     }
 
     @Container
