@@ -18,11 +18,11 @@ public class EventsListener {
     }
 
     @SqsListener(value = "ab2d-events", deletionPolicy = SqsMessageDeletionPolicy.ON_SUCCESS)
-    public void processEvents(SQSMessages loggableEvent) {
-        log.info("EventsListener: Processing events from SQS: " + loggableEvent);
-        switch (loggableEvent.getClass().getSimpleName()) {
+    public void processEvents(SQSMessages sqsMessage) {
+        log.info("EventsListener: Processing events from SQS: " + sqsMessage);
+        switch (sqsMessage.getClass().getSimpleName()) {
             case "GeneralSQSMessage":
-                logManager.log(((GeneralSQSMessage) loggableEvent).getLoggableEvent());
+                logManager.log(((GeneralSQSMessage) sqsMessage).getLoggableEvent());
                 break;
             default:
                 log.info("Can't Identify Message");
