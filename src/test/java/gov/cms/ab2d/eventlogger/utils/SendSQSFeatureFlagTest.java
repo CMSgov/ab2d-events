@@ -1,6 +1,7 @@
 package gov.cms.ab2d.eventlogger.utils;
 
 import com.amazonaws.services.sqs.AmazonSQS;
+import com.amazonaws.services.sqs.model.SendMessageRequest;
 import gov.cms.ab2d.eventclient.clients.SQSEventClient;
 import gov.cms.ab2d.eventclient.events.ApiRequestEvent;
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,8 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import static org.mockito.ArgumentMatchers.anyString;
+
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
@@ -38,6 +40,6 @@ public class SendSQSFeatureFlagTest {
 
         sendSQSEvent.sendLogs(sentApiRequestEvent);
 
-        verify(amazonSQS, never()).getQueueUrl(anyString());
+        verify(amazonSQS, never()).sendMessage(any(SendMessageRequest.class));
     }
 }

@@ -31,7 +31,7 @@ public class SendAndReceiveSqsEventTest {
 
     static {
         System.setProperty("spring.liquibase.enabled", "false");
-        System.setProperty("feature.sqs.enabled:false", "true");
+        System.setProperty("feature.sqs.enabled", "true");
     }
 
     @Container
