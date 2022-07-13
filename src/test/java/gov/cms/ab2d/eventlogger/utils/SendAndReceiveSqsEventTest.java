@@ -6,8 +6,6 @@ import gov.cms.ab2d.eventclient.clients.SQSEventClient;
 import gov.cms.ab2d.eventclient.events.ApiRequestEvent;
 import gov.cms.ab2d.eventclient.events.ApiResponseEvent;
 import gov.cms.ab2d.eventclient.events.LoggableEvent;
-import gov.cms.ab2d.eventclient.messages.GeneralSQSMessage;
-import gov.cms.ab2d.eventclient.messages.SQSMessages;
 import gov.cms.ab2d.eventlogger.LogManager;
 
 
