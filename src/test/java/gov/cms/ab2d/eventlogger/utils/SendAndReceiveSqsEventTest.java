@@ -6,9 +6,12 @@ import gov.cms.ab2d.eventclient.clients.SQSEventClient;
 import gov.cms.ab2d.eventclient.events.ApiRequestEvent;
 import gov.cms.ab2d.eventclient.events.ApiResponseEvent;
 import gov.cms.ab2d.eventclient.events.LoggableEvent;
+import gov.cms.ab2d.eventclient.messages.SQSMessages;
 import gov.cms.ab2d.eventlogger.LogManager;
 
 
+import gov.cms.ab2d.eventlogger.api.EventsListener;
+import java.util.EventListener;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -48,6 +51,9 @@ public class SendAndReceiveSqsEventTest {
     @MockBean
     private LogManager logManager;
 
+    @Autowired
+    private EventsListener eventListener;
+
     @Test
     void testQueueUrl() {
         String url = amazonSQS.getQueueUrl(EVENTS_QUEUE).getQueueUrl();
@@ -76,23 +82,18 @@ public class SendAndReceiveSqsEventTest {
 
     @Test
     void testNonVerifiedObject() throws JsonProcessingException {
-        NonVerifiedLogEvent fakeObject = new NonVerifiedLogEvent();
+        NonVerifiedSQSMessages fakeObject = new NonVerifiedSQSMessages();
 
-        sendSQSEvent.sendLogs(fakeObject);
+        eventListener.processEvents(fakeObject);
 
         //timeout needed because the sqs listener (that uses logManager) is a separate process.
         verify(logManager, never()).log(any(LoggableEvent.class));
     }
 
-    public class NonVerifiedLogEvent extends LoggableEvent {
+    public class NonVerifiedSQSMessages extends SQSMessages {
         private LoggableEvent loggableEvent;
 
-        public NonVerifiedLogEvent() {
-        }
-
-        @Override
-        public String asMessage() {
-            return null;
+        public NonVerifiedSQSMessages() {
         }
     }
 
