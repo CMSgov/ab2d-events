@@ -6,6 +6,8 @@ import gov.cms.ab2d.eventclient.clients.SQSEventClient;
 import gov.cms.ab2d.eventclient.events.ApiRequestEvent;
 import gov.cms.ab2d.eventclient.events.ApiResponseEvent;
 import gov.cms.ab2d.eventclient.events.LoggableEvent;
+import gov.cms.ab2d.eventclient.messages.GeneralSQSMessage;
+import gov.cms.ab2d.eventclient.messages.SQSMessages;
 import gov.cms.ab2d.eventlogger.LogManager;
 
 
@@ -22,6 +24,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 
 import static gov.cms.ab2d.eventclient.clients.SQSConfig.EVENTS_QUEUE;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 
@@ -65,11 +69,33 @@ public class SendAndReceiveSqsEventTest {
         //timeout needed because the sqs listener (that uses logManager) is a separate process.
         verify(logManager, timeout(1000).times(2)).log(captor.capture());
 
-
         List<LoggableEvent> loggedApiRequestEvent = captor.getAllValues();
         Assertions.assertEquals(sentApiRequestEvent, loggedApiRequestEvent.get(0));
         Assertions.assertEquals(sentApiResponseEvent, loggedApiRequestEvent.get(1));
         Assertions.assertEquals(ApiRequestEvent.class, loggedApiRequestEvent.get(0).getClass());
         Assertions.assertEquals(ApiResponseEvent.class, loggedApiRequestEvent.get(1).getClass());
     }
+
+    @Test
+    void testNonVerifiedObject() throws JsonProcessingException {
+        NonVerifiedLogEvent fakeObject = new NonVerifiedLogEvent();
+
+        sendSQSEvent.sendLogs(fakeObject);
+
+        //timeout needed because the sqs listener (that uses logManager) is a separate process.
+        verify(logManager, never()).log(any(LoggableEvent.class));
+    }
+
+    public class NonVerifiedLogEvent extends LoggableEvent {
+        private LoggableEvent loggableEvent;
+
+        public NonVerifiedLogEvent() {
+        }
+
+        @Override
+        public String asMessage() {
+            return null;
+        }
+    }
+
 }
