@@ -26,4 +26,6 @@ public class EventsListener {
                 break;
             default:
                 log.info("Can't Identify Message");
+        }
+    }
 }
