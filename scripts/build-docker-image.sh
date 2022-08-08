@@ -39,7 +39,7 @@ else
   fn_get_temporary_aws_credentials_via_aws_sts_assume_role "${ECR_REPO_ENV_AWS_ACCOUNT_NUMBER}" "${ECR_REPO_ENV}"
 fi
 
-########### Logging into ECR #################
+########### Logging into ECR ####################
 echo Logging in to Amazon ECR...
 aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
 #export REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME
