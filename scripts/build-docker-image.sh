@@ -29,7 +29,7 @@ else # [ "${CLOUD_TAMER}" == "true" ]
   CLOUD_TAMER="${CLOUD_TAMER}"
 
   # Import the "get temporary AWS credentials via CloudTamer API" function
-  source ./scripts/fn_get_temporary_aws_credentials_via_cloudtamer_api.sh
+  source "./scripts/fn_get_temporary_aws_credentials_via_cloudtamer_api.sh"
 
 fi
 
