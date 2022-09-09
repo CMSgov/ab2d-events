@@ -31,7 +31,7 @@ allprojects {
         runtimeOnly 'org.postgresql:postgresql:42.5.0'
         testImplementation 'org.springframework.boot:spring-boot-starter-test:2.7.3'
         testImplementation 'commons-io:commons-io:2.11.0'
-        testImplementation 'org.springframework.data:spring-data-jpa:2.7.3'
+        testImplementation 'org.springframework.data:spring-data-jpa:2.7.2'
         testImplementation 'org.liquibase:liquibase-core:4.15.0'
         testImplementation 'org.testcontainers:localstack:1.17.3'
     }
