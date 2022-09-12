@@ -4,7 +4,6 @@ import gov.cms.ab2d.eventclient.events.LoggableEvent;
 import gov.cms.ab2d.eventclient.events.MetricsEvent;
 import gov.cms.ab2d.eventlogger.EventLoggingException;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -34,11 +33,10 @@ public class MetricsEventMapper extends SqlEventMapper {
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String query = "insert into event.event_metrics " +
-                " (time_of_event, service) " +
-                " values (:time, :service)";
+                " (time_of_event, service, awsId, environment, job_id) " +
+                " values (:time, :service, :awsId, :environment, :job)";
 
-        SqlParameterSource parameters = new MapSqlParameterSource()
-                .addValue("time", metricsEvent.getTimeOfEvent())
+        SqlParameterSource parameters = super.addSuperParams(event)
                 .addValue("service", metricsEvent.getService()
                         .toString());
 
@@ -54,10 +52,12 @@ public class MetricsEventMapper extends SqlEventMapper {
     }
 
     @Override
-    public Object mapRow(@NotNull ResultSet rs, int rowNum) throws SQLException {
-        return MetricsEvent.builder()
+    public MetricsEvent mapRow(@NotNull ResultSet rs, int rowNum) throws SQLException {
+        MetricsEvent event = MetricsEvent.builder()
                 .service(rs.getString("service"))
                 .timeOfEvent(rs.getObject("time_of_event", OffsetDateTime.class))
                 .build();
+        extractSuperParams(rs, event);
+        return event;
     }
 }
