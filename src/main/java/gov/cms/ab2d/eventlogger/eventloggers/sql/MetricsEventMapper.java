@@ -11,7 +11,6 @@ import org.springframework.jdbc.support.KeyHolder;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -33,12 +32,12 @@ public class MetricsEventMapper extends SqlEventMapper {
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String query = "insert into event.event_metrics " +
-                " (time_of_event, service, awsId, environment, job_id) " +
-                " values (:time, :service, :awsId, :environment, :job)";
+                " (time_of_event, service, state_type, awsId, environment, job_id) " +
+                " values (:time, :service, :statetype, :awsId, :environment, :job)";
 
         SqlParameterSource parameters = super.addSuperParams(event)
-                .addValue("service", metricsEvent.getService()
-                        .toString());
+                .addValue("service", metricsEvent.getService())
+                .addValue("statetype", metricsEvent.getStateType());
 
         template.update(query, parameters, keyHolder);
         event.setId(Stream.of(keyHolder.getKeys())
@@ -55,7 +54,7 @@ public class MetricsEventMapper extends SqlEventMapper {
     public MetricsEvent mapRow(@NotNull ResultSet rs, int rowNum) throws SQLException {
         MetricsEvent event = MetricsEvent.builder()
                 .service(rs.getString("service"))
-                .timeOfEvent(rs.getObject("time_of_event", OffsetDateTime.class))
+                .stateType(rs.getString("state_type"))
                 .build();
         extractSuperParams(rs, event);
         return event;
