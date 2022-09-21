@@ -32,11 +32,12 @@ public class MetricsEventMapper extends SqlEventMapper {
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String query = "insert into event.event_metrics " +
-                " (time_of_event, service, state_type, awsId, environment, job_id) " +
-                " values (:time, :service, :statetype, :awsId, :environment, :job)";
+                " (time_of_event, service, state_type, event_description, awsId, environment, job_id) " +
+                " values (:time, :service, :statetype, :eventdescription, :awsId, :environment, :job)";
 
         SqlParameterSource parameters = super.addSuperParams(event)
                 .addValue("service", metricsEvent.getService())
+                .addValue("eventdescription", metricsEvent.getEventDescription())
                 .addValue("statetype", metricsEvent.getStateType());
 
         template.update(query, parameters, keyHolder);
@@ -54,6 +55,7 @@ public class MetricsEventMapper extends SqlEventMapper {
     public MetricsEvent mapRow(@NotNull ResultSet rs, int rowNum) throws SQLException {
         MetricsEvent event = MetricsEvent.builder()
                 .service(rs.getString("service"))
+                .service(rs.getString("event_description"))
                 .stateType(rs.getString("state_type"))
                 .build();
         extractSuperParams(rs, event);

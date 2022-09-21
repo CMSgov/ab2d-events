@@ -12,6 +12,6 @@ pluginManagement {
     }
 }
 
-rootProject.buildFileName = 'ab2d-event'
+rootProject.name = 'ab2d-event'
 
 
