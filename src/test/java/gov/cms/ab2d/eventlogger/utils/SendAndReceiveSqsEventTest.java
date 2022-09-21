@@ -21,7 +21,6 @@ import gov.cms.ab2d.eventlogger.LogManager;
 
 
 import gov.cms.ab2d.eventlogger.api.EventsListener;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
