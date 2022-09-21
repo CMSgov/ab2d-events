@@ -2,7 +2,6 @@ package gov.cms.ab2d.eventlogger.utils;
 
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import gov.cms.ab2d.eventclient.clients.EventClient;
 import gov.cms.ab2d.eventclient.clients.SQSEventClient;
 import gov.cms.ab2d.eventclient.config.Ab2dEnvironment;
 import gov.cms.ab2d.eventclient.events.ApiRequestEvent;
