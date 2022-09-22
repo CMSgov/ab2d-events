@@ -35,8 +35,9 @@ public class MetricsEventMapper extends SqlEventMapper {
                 " (time_of_event, service, state_type, event_description, awsId, environment, job_id) " +
                 " values (:time, :service, :statetype, :eventdescription, :awsId, :environment, :job)";
 
+
         SqlParameterSource parameters = super.addSuperParams(event)
-                .addValue("service", metricsEvent.getService())
+                .addValue("service", cleanUpService(metricsEvent.getService()))
                 .addValue("eventdescription", metricsEvent.getEventDescription())
                 .addValue("statetype", metricsEvent.getStateType());
 
@@ -60,5 +61,14 @@ public class MetricsEventMapper extends SqlEventMapper {
                 .build();
         extractSuperParams(rs, event);
         return event;
+    }
+
+    private String cleanUpService(String service) {
+        if (service == null) {
+            throw new RuntimeException("Service was not defined");
+        }
+        return service.length() > 1 && service.charAt(0) == '-'
+                ? service.substring(1)
+                : service; // clean up service
     }
 }
