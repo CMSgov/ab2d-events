@@ -11,7 +11,9 @@ import org.springframework.jdbc.support.KeyHolder;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class MetricsEventMapper extends SqlEventMapper {
@@ -37,7 +39,7 @@ public class MetricsEventMapper extends SqlEventMapper {
 
 
         SqlParameterSource parameters = super.addSuperParams(event)
-                .addValue("service", cleanUpService(metricsEvent.getService()))
+                .addValue("service", metricsEvent.getService())
                 .addValue("eventdescription", metricsEvent.getEventDescription())
                 .addValue("statetype", metricsEvent.getStateType());
 
@@ -57,18 +59,10 @@ public class MetricsEventMapper extends SqlEventMapper {
         MetricsEvent event = MetricsEvent.builder()
                 .service(rs.getString("service"))
                 .service(rs.getString("event_description"))
-                .stateType(rs.getString("state_type"))
+                .stateType(MetricsEvent.State.valueOf(rs.getString("state_type")))
                 .build();
         extractSuperParams(rs, event);
         return event;
     }
 
-    private String cleanUpService(String service) {
-        if (service == null) {
-            throw new RuntimeException("Service was not defined");
-        }
-        return service.length() > 1 && service.charAt(0) == '-'
-                ? service.substring(1)
-                : service; // clean up service
-    }
 }
