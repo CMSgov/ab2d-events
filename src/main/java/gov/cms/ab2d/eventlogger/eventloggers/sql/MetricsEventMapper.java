@@ -41,7 +41,7 @@ public class MetricsEventMapper extends SqlEventMapper {
         SqlParameterSource parameters = super.addSuperParams(event)
                 .addValue("service", metricsEvent.getService())
                 .addValue("eventdescription", metricsEvent.getEventDescription())
-                .addValue("statetype", metricsEvent.getStateType());
+                .addValue("statetype", metricsEvent.getStateType().toString());
 
         template.update(query, parameters, keyHolder);
         event.setId(Stream.of(keyHolder.getKeys())
