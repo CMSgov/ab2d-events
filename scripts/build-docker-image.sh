@@ -56,3 +56,8 @@ docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGI
 echo Build completed on `date`
 echo Pushing the Docker image...
 docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+
+
+####### update ECS service with new image ################
+
+aws ecs update-service --cluster $DEPLOYMENT_ENV-microservice-cluster  --service ab2d-event-service --force-new-deployment
