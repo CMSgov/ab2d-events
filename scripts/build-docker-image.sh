@@ -48,14 +48,14 @@ aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --usernam
 ############# Building docker image ###############
 echo Build started on `date`
 echo Building the Docker image...          
-docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
-docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG 
+docker build -t $ECR_REPO_ENV:$IMAGE_TAG .
+docker tag $ECR_REPO_ENV:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG 
 
 
 ##### pushing docker image to ECR ################
 echo Build completed on `date`
 echo Pushing the Docker image...
-docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPO_ENV:$IMAGE_TAG
 
 ####### update ECS service with new image ################
 
