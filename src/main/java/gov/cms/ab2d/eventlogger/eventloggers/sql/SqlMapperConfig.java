@@ -7,6 +7,7 @@ import gov.cms.ab2d.eventclient.events.ErrorEvent;
 import gov.cms.ab2d.eventclient.events.FileEvent;
 import gov.cms.ab2d.eventclient.events.JobStatusChangeEvent;
 import gov.cms.ab2d.eventclient.events.LoggableEvent;
+import gov.cms.ab2d.eventclient.events.MetricsEvent;
 import gov.cms.ab2d.eventclient.events.ReloadEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -49,6 +50,7 @@ public class SqlMapperConfig {
         mapperMapping.put(ErrorEvent.class, new ErrorEventMapper(jdbcTemplate));
         mapperMapping.put(FileEvent.class, new FileEventMapper(jdbcTemplate));
         mapperMapping.put(JobStatusChangeEvent.class, new JobStatusChangeEventMapper(jdbcTemplate));
+        mapperMapping.put(MetricsEvent.class, new MetricsEventMapper(jdbcTemplate));
 
         tableMapping.put(ApiRequestEvent.class, "event.event_api_request");
         tableMapping.put(ApiResponseEvent.class, "event.event_api_response");
@@ -57,6 +59,7 @@ public class SqlMapperConfig {
         tableMapping.put(ErrorEvent.class, "event.event_error");
         tableMapping.put(FileEvent.class, "event.event_file");
         tableMapping.put(JobStatusChangeEvent.class, "event.event_job_status_change");
+        tableMapping.put(MetricsEvent.class, "event.event_metrics");
     }
 
     public Set<Class<? extends LoggableEvent>> getClasses() {
