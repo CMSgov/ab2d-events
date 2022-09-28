@@ -44,7 +44,6 @@ public class EventsListener {
             case "KinesisSQSMessage" ->
                     logManager.log(LogManager.LogType.KINESIS, ((KinesisSQSMessage) sqsMessage).getLoggableEvent());
             default -> log.info("Can't Identify Message " + sqsMessage);
-
         }
     }
 }
