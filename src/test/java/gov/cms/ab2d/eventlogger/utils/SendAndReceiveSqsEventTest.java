@@ -33,7 +33,6 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 
-import static gov.cms.ab2d.eventclient.clients.SQSConfig.EVENTS_QUEUE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -50,6 +49,8 @@ public class SendAndReceiveSqsEventTest {
         System.setProperty("spring.liquibase.enabled", "false");
         System.setProperty("feature.sqs.enabled", "true");
     }
+
+    public static final String DEV_EVENTS_SQS = "ab2d-dev-events-sqs";
 
     @Container
     private static final AB2DLocalstackContainer LOCALSTACK_CONTAINER = new AB2DLocalstackContainer();
@@ -68,9 +69,9 @@ public class SendAndReceiveSqsEventTest {
 
     @Test
     void testQueueUrl() {
-        String url = amazonSQS.getQueueUrl(EVENTS_QUEUE).getQueueUrl();
+        String url = amazonSQS.getQueueUrl(DEV_EVENTS_SQS).getQueueUrl();
         Assertions.assertTrue(url.contains("localhost:"));
-        Assertions.assertTrue(url.contains(EVENTS_QUEUE));
+        Assertions.assertTrue(url.contains(DEV_EVENTS_SQS));
     }
 
     @Test
