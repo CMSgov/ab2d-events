@@ -16,7 +16,7 @@ version = 1.0
 group = "gov.cms.ab2d"
 
 ext {
-    springBootVersion='2.7.4'
+    springBootVersion='2.7.5'
 }
 
 allprojects {
