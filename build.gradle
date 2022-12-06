@@ -38,7 +38,7 @@ allprojects {
         implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.14.0'
         implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.0'
         implementation "gov.cms.ab2d:ab2d-events-client:1.11.2"
-        implementation 'com.slack.api:slack-api-client:1.27.1'
+        implementation 'com.slack.api:slack-api-client:1.27.2'
         runtimeOnly "javax.xml.bind:jaxb-api:2.4.0-b180830.0359"
         runtimeOnly 'org.postgresql:postgresql:42.5.1'
         testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
