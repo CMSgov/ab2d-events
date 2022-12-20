@@ -5,7 +5,7 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 plugins {
     id 'java'
     id 'org.springframework.boot' version "2.7.4"
-    id 'com.jfrog.artifactory' version '4.29.3' apply false
+    id 'com.jfrog.artifactory' version '4.30.1' apply false
     id "org.sonarqube" version "3.5.0.2730"
     id "gov.cms.ab2d.plugin" version "1.0.1"
     id 'maven-publish'
