@@ -5,8 +5,8 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 plugins {
     id 'java'
     id 'org.springframework.boot' version "2.7.4"
-    id 'com.jfrog.artifactory' version '4.29.1' apply false
-    id "org.sonarqube" version "3.4.0.2513"
+    id 'com.jfrog.artifactory' version '4.29.3' apply false
+    id "org.sonarqube" version "3.5.0.2730"
     id "gov.cms.ab2d.plugin" version "1.0.1"
     id 'maven-publish'
     id 'org.cyclonedx.bom' version '1.7.2' apply true
@@ -17,6 +17,7 @@ group = "gov.cms.ab2d"
 
 ext {
     springBootVersion= '2.7.6'
+    liquibaseVersion="4.17.2"
 }
 
 allprojects {
@@ -32,7 +33,7 @@ allprojects {
         implementation "org.springframework.cloud:spring-cloud-starter-aws-messaging:2.2.6.RELEASE"
         implementation "commons-codec:commons-codec:1.15"
         implementation "javax.servlet:javax.servlet-api:4.0.1"
-        implementation 'org.liquibase:liquibase-core:4.17.2'
+        implementation "org.liquibase:liquibase-core:${liquibaseVersion}"
         implementation "com.amazonaws:amazon-kinesis-client:1.14.8"
         implementation 'com.fasterxml.jackson.module:jackson-module-parameter-names:2.14.0'
         implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.14.0'
@@ -44,8 +45,8 @@ allprojects {
         testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
         testImplementation "commons-io:commons-io:2.11.0"
         testImplementation 'org.springframework.data:spring-data-jpa:2.7.6'
-        testImplementation 'org.liquibase:liquibase-core:4.17.2'
-        testImplementation 'org.testcontainers:localstack:1.17.6'
+        testImplementation "org.liquibase:liquibase-core:${liquibaseVersion}"
+        testImplementation "org.testcontainers:localstack:1.17.6"
         compileOnly "org.cyclonedx:cyclonedx-gradle-plugin:1.4.0"
         compileOnly 'org.cyclonedx:cyclonedx-core-java:7.3.0'
     }
