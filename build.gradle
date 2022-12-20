@@ -34,7 +34,7 @@ allprojects {
         implementation "commons-codec:commons-codec:1.15"
         implementation "javax.servlet:javax.servlet-api:4.0.1"
         implementation "org.liquibase:liquibase-core:${liquibaseVersion}"
-        implementation "com.amazonaws:amazon-kinesis-client:1.14.8"
+        implementation "com.amazonaws:amazon-kinesis-client:1.14.9"
         implementation 'com.fasterxml.jackson.module:jackson-module-parameter-names:2.14.0'
         implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.14.0'
         implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.0'
