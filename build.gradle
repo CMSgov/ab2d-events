@@ -36,7 +36,7 @@ allprojects {
         implementation "org.liquibase:liquibase-core:${liquibaseVersion}"
         implementation "com.amazonaws:amazon-kinesis-client:1.14.8"
         implementation 'com.fasterxml.jackson.module:jackson-module-parameter-names:2.14.0'
-        implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.14.0'
+        implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.14.1'
         implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.0'
         implementation "gov.cms.ab2d:ab2d-events-client:1.11.2"
         implementation 'com.slack.api:slack-api-client:1.27.1'
