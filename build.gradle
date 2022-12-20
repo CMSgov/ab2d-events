@@ -7,22 +7,27 @@ plugins {
     id 'org.springframework.boot' version "2.7.4"
     id 'com.jfrog.artifactory' version '4.29.3' apply false
     id "org.sonarqube" version "3.5.0.2730"
-    id "gov.cms.ab2d.plugin" version "0.0.1-SNAPSHOT"
+    id "gov.cms.ab2d.plugin" version "1.0.1"
     id 'maven-publish'
+    id 'org.cyclonedx.bom' version '1.7.2' apply true
 }
 
+version = 1.0
+group = "gov.cms.ab2d"
+
 ext {
-    springBootVersion='2.7.5'
+    springBootVersion= '2.7.6'
     liquibaseVersion="4.17.2"
 }
 
 allprojects {
     apply plugin: 'gov.cms.ab2d.plugin'
+    apply plugin: "org.cyclonedx.bom"
     dependencies {
         implementation "com.squareup.okhttp3:okhttp:4.10.0"
         implementation "org.springframework.boot:spring-boot-starter:${springBootVersion}"
         implementation "org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}"
-        implementation "org.springframework:spring-web:5.3.23"
+        implementation 'org.springframework:spring-web:5.3.24'
         implementation "org.springframework.boot:spring-boot-starter-jdbc:${springBootVersion}"
         implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
         implementation "org.springframework.cloud:spring-cloud-starter-aws-messaging:2.2.6.RELEASE"
@@ -30,18 +35,41 @@ allprojects {
         implementation "javax.servlet:javax.servlet-api:4.0.1"
         implementation "org.liquibase:liquibase-core:${liquibaseVersion}"
         implementation "com.amazonaws:amazon-kinesis-client:1.14.8"
-        implementation "com.fasterxml.jackson.module:jackson-module-parameter-names:2.14.0"
-        implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.14.0"
-        implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.0"
-        implementation "gov.cms.ab2d:ab2d-events-client:1.11"
-        implementation "com.slack.api:slack-api-client:1.27.1"
+        implementation 'com.fasterxml.jackson.module:jackson-module-parameter-names:2.14.0'
+        implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.14.0'
+        implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.0'
+        implementation "gov.cms.ab2d:ab2d-events-client:1.11.2"
+        implementation 'com.slack.api:slack-api-client:1.27.1'
         runtimeOnly "javax.xml.bind:jaxb-api:2.4.0-b180830.0359"
-        runtimeOnly "org.postgresql:postgresql:42.5.0"
+        runtimeOnly 'org.postgresql:postgresql:42.5.1'
         testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
         testImplementation "commons-io:commons-io:2.11.0"
-        testImplementation 'org.springframework.data:spring-data-jpa:2.7.5'
+        testImplementation 'org.springframework.data:spring-data-jpa:2.7.6'
         testImplementation "org.liquibase:liquibase-core:${liquibaseVersion}"
         testImplementation "org.testcontainers:localstack:1.17.6"
+        compileOnly "org.cyclonedx:cyclonedx-gradle-plugin:1.4.0"
+        compileOnly 'org.cyclonedx:cyclonedx-core-java:7.3.0'
+    }
+
+    cyclonedxBom {
+        // includeConfigs is the list of configuration names to include when generating the BOM (leave empty to include every configuration)
+        includeConfigs = ["runtimeClasspath"]
+        // skipConfigs is a list of configuration names to exclude when generating the BOM
+        skipConfigs = ["compileClasspath", "testCompileClasspath"]
+        // Specified the type of project being built. Defaults to 'library'
+        projectType = "library"
+        // Specified the version of the CycloneDX specification to use. Defaults to 1.4.
+        schemaVersion = "1.4"
+        // Boms destination directory (defaults to build/reports)
+        destination = file("build/reports")
+        // The file name for the generated BOMs (before the file format suffix). Defaults to 'bom'
+        outputName = "bom"
+        // The file format generated, can be xml, json or all for generating both
+        outputFormat = "all"
+        // Exclude BOM Serial Number
+        includeBomSerialNumber = false
+        // Override component version
+        componentVersion = "2.0.0"
     }
 }
 
