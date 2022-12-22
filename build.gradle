@@ -48,7 +48,7 @@ allprojects {
         testImplementation "org.liquibase:liquibase-core:${liquibaseVersion}"
         testImplementation "org.testcontainers:localstack:1.17.6"
         compileOnly "org.cyclonedx:cyclonedx-gradle-plugin:1.4.0"
-        compileOnly 'org.cyclonedx:cyclonedx-core-java:7.3.0'
+        compileOnly 'org.cyclonedx:cyclonedx-core-java:7.3.1'
     }
 
     cyclonedxBom {
