@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 set -e # Turn on exit on error
-sex -x
+set -x
 
 
 # ECR_REPO_ENV_AWS_ACCOUNT_NUMBER=$ECR_REPO_ENV_AWS_ACCOUNT_NUMBER
