@@ -46,11 +46,16 @@ echo Logging in to Amazon ECR...
 aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
 #export REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPO_ENV
 
+###### Untagg Old image ##########################
+docker tag $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPO_ENV:$IMAGE_TAG \
+    $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPO_ENV:$(date +%H%M%S)
+
 ############# Building docker image ###############
 echo Build started on `date`
 echo Building the Docker image...          
 docker build --no-cache -t $ECR_REPO_ENV:$IMAGE_TAG .
 docker tag $ECR_REPO_ENV:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPO_ENV:$IMAGE_TAG
+
 
 ##### pushing docker image to ECR ################
 echo Build completed on `date`
