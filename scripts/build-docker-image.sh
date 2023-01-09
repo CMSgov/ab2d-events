@@ -48,7 +48,8 @@ aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --usernam
 
 ###### Untagg Old image ##########################
 echo Retagging old image....
-docker tag $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPO_ENV:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPO_ENV:$(date +%H%M%S)
+TIMESTAMP=$(date +%H%M%S)
+docker tag $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPO_ENV:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPO_ENV:$TIMESTAMP
 
 ############# Building docker image ###############
 echo Build started on `date`
