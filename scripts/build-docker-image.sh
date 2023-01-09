@@ -11,7 +11,7 @@ DEPLOYMENT_ENV=$DEPLOYMENT_ENV
 # Set default AWS region and tag
 
   export AWS_DEFAULT_REGION="us-east-1"
-  export IMAGE_TAG="events-service"
+  export IMAGE_TAG="event-service"
   
             
 if [ "${CLOUD_TAMER}" != "false" ] && [ "${CLOUD_TAMER}" != "true" ]; then
