@@ -5,11 +5,11 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 plugins {
     id 'java'
     id 'org.springframework.boot' version "2.7.6"
-    id 'com.jfrog.artifactory' version '4.31.0' apply false
-    id "org.sonarqube" version "3.5.0.2730"
+    id 'com.jfrog.artifactory' version '4.31.3' apply false
+    id "org.sonarqube" version "4.0.0.2929"
     id "gov.cms.ab2d.plugin" version "1.0.2"
     id 'maven-publish'
-    id 'org.cyclonedx.bom' version '1.7.3' apply true
+    id 'org.cyclonedx.bom' version '1.7.4' apply true
 }
 
 version = 1.0
@@ -35,14 +35,14 @@ allprojects {
         implementation "commons-codec:commons-codec:1.15"
         implementation "javax.servlet:javax.servlet-api:4.0.1"
         implementation "org.liquibase:liquibase-core:${liquibaseVersion}"
-        implementation "com.amazonaws:amazon-kinesis-client:1.14.9"
+        implementation "com.amazonaws:amazon-kinesis-client:1.14.10"
         implementation "com.fasterxml.jackson.module:jackson-module-parameter-names:${jacksonVersion}"
         implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${jacksonVersion}"
         implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
         implementation "gov.cms.ab2d:ab2d-events-client:1.11.4"
         implementation 'com.slack.api:slack-api-client:1.27.3'
         runtimeOnly "javax.xml.bind:jaxb-api:2.4.0-b180830.0359"
-        runtimeOnly 'org.postgresql:postgresql:42.5.3'
+        runtimeOnly 'org.postgresql:postgresql:42.5.4'
         testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
         testImplementation "commons-io:commons-io:2.11.0"
         testImplementation 'org.springframework.data:spring-data-jpa:2.7.6'
