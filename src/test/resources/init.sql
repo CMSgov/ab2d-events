@@ -1,2 +1,2 @@
 CREATE SCHEMA event;
-CREATE IF NOT EXIST SEQUENCE event_api_request_id_seq;
+CREATE SEQUENCE IF NOT EXIST event_api_request_id_seq;
