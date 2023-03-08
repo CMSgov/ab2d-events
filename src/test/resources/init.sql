@@ -1,2 +1,1 @@
 CREATE SCHEMA event;
-CREATE SEQUENCE IF NOT EXISTS event_api_request_id_seq START 1;
