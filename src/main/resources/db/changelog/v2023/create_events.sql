@@ -12,8 +12,6 @@ CREATE TABLE IF NOT EXISTS event.event_api_request (
     CONSTRAINT event_api_request_pkey PRIMARY KEY (id)
 );
 
-GRANT SELECT ON TABLE event.event_api_request TO ab2d_analyst;
-
 CREATE TABLE IF NOT EXISTS event.event_api_response (
     id integer NOT NULL DEFAULT nextval('event_api_response_id_seq'::regclass),
     time_of_event timestamp with time zone,
@@ -28,8 +26,6 @@ CREATE TABLE IF NOT EXISTS event.event_api_response (
     CONSTRAINT event_api_response_pkey PRIMARY KEY (id)
 );
 
-GRANT SELECT ON TABLE event.event_api_response TO ab2d_analyst;
-
 CREATE TABLE IF NOT EXISTS event.event_bene_reload (
     id integer NOT NULL DEFAULT nextval('event_bene_reload_id_seq'::regclass),
     time_of_event timestamp with time zone,
@@ -42,8 +38,6 @@ CREATE TABLE IF NOT EXISTS event.event_bene_reload (
     organization character varying(255) COLLATE pg_catalog."default",
     CONSTRAINT event_bene_reload_pkey PRIMARY KEY (id)
 );
-
-GRANT SELECT ON TABLE event.event_bene_reload TO ab2d_analyst;
 
 CREATE TABLE IF NOT EXISTS event.event_bene_search (
     id integer NOT NULL DEFAULT nextval('event_bene_search_id_seq'::regclass),
@@ -64,8 +58,6 @@ CREATE TABLE IF NOT EXISTS event.event_bene_search (
     benes_with_eobs integer DEFAULT 0,
     CONSTRAINT event_bene_search_pkey PRIMARY KEY (id)
 );
-
-GRANT SELECT ON TABLE event.event_bene_search TO ab2d_analyst;
 
 CREATE INDEX IF NOT EXISTS event_bene_search_job_id_idx
     ON event.event_bene_search USING btree
@@ -89,8 +81,6 @@ CREATE TABLE IF NOT EXISTS event.event_error (
     CONSTRAINT event_error_pkey PRIMARY KEY (id)
 );
 
-GRANT SELECT ON TABLE event.event_error TO ab2d_analyst;
-
 CREATE TABLE IF NOT EXISTS event.event_file (
     id integer NOT NULL DEFAULT nextval('event_file_id_seq'::regclass),
     time_of_event timestamp with time zone,
@@ -104,8 +94,6 @@ CREATE TABLE IF NOT EXISTS event.event_file (
     organization character varying(255) COLLATE pg_catalog."default",
     CONSTRAINT event_file_pkey PRIMARY KEY (id)
 );
-
-GRANT SELECT ON TABLE event.event_file TO ab2d_analyst;
 
 GRANT ALL ON TABLE event.event_file TO postgres;
 -- Index: event_file_job_id_idx
@@ -132,8 +120,6 @@ CREATE TABLE IF NOT EXISTS event.event_job_status_change (
     organization character varying(255) COLLATE pg_catalog."default",
     CONSTRAINT event_job_status_change_pkey PRIMARY KEY (id)
 );
-
-GRANT SELECT ON TABLE event.event_job_status_change TO ab2d_analyst;
 
 CREATE INDEX IF NOT EXISTS event_job_status_change_job_id_idx
     ON event.event_job_status_change USING btree
