@@ -1,10 +1,10 @@
-CREATE SEQUENCE IF NOT EXISTS event_api_request_id_seq START 1;
-CREATE SEQUENCE IF NOT EXISTS event_api_response_id_seq START 1;
-CREATE SEQUENCE IF NOT EXISTS event_bene_reload_id_seq START 1;
-CREATE SEQUENCE IF NOT EXISTS event_error_id_seq START 1;
-CREATE SEQUENCE IF NOT EXISTS event_file_id_seq START 1;
-CREATE SEQUENCE IF NOT EXISTS event_job_status_change_id_seq START 1;
-CREATE SEQUENCE IF NOT EXISTS event_bene_search_id_seq START 1;
+CREATE SEQUENCE IF NOT EXISTS event.event_api_request_id_seq START 1;
+CREATE SEQUENCE IF NOT EXISTS event.event_api_response_id_seq START 1;
+CREATE SEQUENCE IF NOT EXISTS event.event_bene_reload_id_seq START 1;
+CREATE SEQUENCE IF NOT EXISTS event.event_error_id_seq START 1;
+CREATE SEQUENCE IF NOT EXISTS event.event_file_id_seq START 1;
+CREATE SEQUENCE IF NOT EXISTS event.event_job_status_change_id_seq START 1;
+CREATE SEQUENCE IF NOT EXISTS event.event_bene_search_id_seq START 1;
 
 CREATE TABLE IF NOT EXISTS event.event_api_request (
     id integer NOT NULL DEFAULT nextval('event_api_request_id_seq'::regclass),
@@ -67,16 +67,6 @@ CREATE TABLE IF NOT EXISTS event.event_bene_search (
     CONSTRAINT event_bene_search_pkey PRIMARY KEY (id)
 );
 
-CREATE INDEX IF NOT EXISTS event_bene_search_job_id_idx
-    ON event.event_bene_search USING btree
-    (job_id COLLATE pg_catalog."default" ASC NULLS LAST)
-    TABLESPACE pg_default;
-
-CREATE INDEX IF NOT EXISTS ix_bene_search_job_id
-    ON event.event_bene_search USING btree
-    (job_id COLLATE pg_catalog."default" ASC NULLS LAST)
-    TABLESPACE pg_default;
-
 CREATE TABLE IF NOT EXISTS event.event_error (
     id integer NOT NULL DEFAULT nextval('event_error_id_seq'::regclass),
     time_of_event timestamp with time zone,
@@ -103,16 +93,6 @@ CREATE TABLE IF NOT EXISTS event.event_file (
     CONSTRAINT event_file_pkey PRIMARY KEY (id)
 );
 
-CREATE INDEX IF NOT EXISTS event_file_job_id_idx
-    ON event.event_file USING btree
-    (job_id COLLATE pg_catalog."default" ASC NULLS LAST)
-    TABLESPACE pg_default;
-
-CREATE INDEX IF NOT EXISTS ix_file_event_job_id
-    ON event.event_file USING btree
-    (job_id COLLATE pg_catalog."default" ASC NULLS LAST)
-    TABLESPACE pg_default;
-
 CREATE TABLE IF NOT EXISTS event.event_job_status_change (
     id integer NOT NULL DEFAULT nextval('event_job_status_change_id_seq'::regclass),
     time_of_event timestamp with time zone,
@@ -125,13 +105,3 @@ CREATE TABLE IF NOT EXISTS event.event_job_status_change (
     organization character varying(255) COLLATE pg_catalog."default",
     CONSTRAINT event_job_status_change_pkey PRIMARY KEY (id)
 );
-
-CREATE INDEX IF NOT EXISTS event_job_status_change_job_id_idx
-    ON event.event_job_status_change USING btree
-    (job_id COLLATE pg_catalog."default" ASC NULLS LAST)
-    TABLESPACE pg_default;
-
-CREATE INDEX IF NOT EXISTS ix_job_status_job_id
-    ON event.event_job_status_change USING btree
-    (job_id COLLATE pg_catalog."default" ASC NULLS LAST)
-    TABLESPACE pg_default;
