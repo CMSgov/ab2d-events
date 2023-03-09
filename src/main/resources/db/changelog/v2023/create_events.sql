@@ -4,6 +4,7 @@ CREATE SEQUENCE IF NOT EXISTS event_bene_reload_id_seq START 1;
 CREATE SEQUENCE IF NOT EXISTS event_error_id_seq START 1;
 CREATE SEQUENCE IF NOT EXISTS event_file_id_seq START 1;
 CREATE SEQUENCE IF NOT EXISTS event_job_status_change_id_seq START 1;
+CREATE SEQUENCE IF NOT EXISTS event_bene_search_id_seq START 1;
 
 CREATE TABLE IF NOT EXISTS event.event_api_request (
     id integer NOT NULL DEFAULT nextval('event_api_request_id_seq'::regclass),
