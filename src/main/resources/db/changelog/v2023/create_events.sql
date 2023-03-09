@@ -108,11 +108,11 @@ CREATE TABLE IF NOT EXISTS event.event_job_status_change (
 
 CREATE TABLE IF NOT EXISTS event.event_metrics
 (
-    id            BIGSERIAL PRIMARY KEY COLLATE pg_catalog."default",
+    id            BIGSERIAL PRIMARY KEY,
     service       varchar(64) not null COLLATE pg_catalog."default",
     state_type       varchar(64) not null COLLATE pg_catalog."default", -- is the event beginning, continuing, or ending
     event_description varchar(4096) COLLATE pg_catalog."default",
-    time_of_event timestamp   not null COLLATE pg_catalog."default",
+    time_of_event timestamp with time zone,
     awsId         varchar(255) COLLATE pg_catalog."default",
     environment   varchar(255) COLLATE pg_catalog."default",
     job_id        varchar(255) COLLATE pg_catalog."default"
