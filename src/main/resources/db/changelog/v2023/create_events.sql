@@ -103,9 +103,6 @@ CREATE TABLE IF NOT EXISTS event.event_file (
     CONSTRAINT event_file_pkey PRIMARY KEY (id)
 );
 
-GRANT ALL ON TABLE event.event_file TO postgres;
--- Index: event_file_job_id_idx
-
 CREATE INDEX IF NOT EXISTS event_file_job_id_idx
     ON event.event_file USING btree
     (job_id COLLATE pg_catalog."default" ASC NULLS LAST)
