@@ -57,7 +57,6 @@ allprojects {
         includeConfigs = ["runtimeClasspath"]
         // skipConfigs is a list of configuration names to exclude when generating the BOM
         skipConfigs = ["compileClasspath", "testCompileClasspath"]
-
         // Specified the type of project being built. Defaults to 'library'
         projectType = "library"
         // Specified the version of the CycloneDX specification to use. Defaults to 1.4.
