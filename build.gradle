@@ -47,7 +47,7 @@ allprojects {
         testImplementation "commons-io:commons-io:2.11.0"
         testImplementation 'org.springframework.data:spring-data-jpa:2.7.6'
         testImplementation "org.liquibase:liquibase-core:${liquibaseVersion}"
-        testImplementation "org.testcontainers:localstack:1.17.6"
+        testImplementation "org.testcontainers:localstack:1.18.0"
         compileOnly "org.cyclonedx:cyclonedx-gradle-plugin:1.4.0"
         compileOnly 'org.cyclonedx:cyclonedx-core-java:7.3.1'
     }
