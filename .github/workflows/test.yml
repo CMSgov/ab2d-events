@@ -1,0 +1,78 @@
+name: Build and Test
+
+on:
+  pull_request:
+    branches:
+      - 'test/*'
+
+env:
+  ARTIFACTORY_URL: ${{ secrets.ARTIFACTORY_URL }}
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Set up JDK and Gradle
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+      
+      - name: Build files
+        if: github.event_name == 'pull_request'
+        run: |
+          ./gradlew build -x test
+        env:
+          ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
+          ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
+          ARTIFACTORY_URL: ${{ secrets.ARTIFACTORY_URL }}
+      
+      - name: Do tests
+        if: github.event_name == 'pull_request'
+        run: |
+          ./gradlew clean test --info build
+        env:
+          ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
+          ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
+          ARTIFACTORY_URL: ${{ secrets.ARTIFACTORY_URL }}
+      
+      - name: Build Jar
+        if: github.event_name == 'pull_request'
+        run: |
+          ./gradlew jar --info build
+        env:
+          ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
+          ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
+          ARTIFACTORY_URL: ${{ secrets.ARTIFACTORY_URL }}
+      
+      - name: SonarQube Analysis
+        if: github.event_name == 'pull_request'
+        uses: sonarsource/sonarqube-scan-action@v1
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          projectBaseDir: '.'
+          projectName: 'ab2d-events'
+          projectKey: 'ab2d-events'
+          serverUrl: 'https://sonarqube.cloud.cms.gov'
+      
+      - name: Quality Gate
+        if: github.event_name == 'pull_request'
+        uses: sonarsource/quality-gate-action@v2
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          waitForQualityGate: true
+      
+      - name: SBOM
+        if: github.event_name == 'pull_request'
+        run: |
+          ./gradlew cyclonedxBom
+        env:
+          ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
+          ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
+          ARTIFACTORY_URL: ${{ secrets.ARTIFACTORY_URL }}
