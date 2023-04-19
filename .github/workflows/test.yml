@@ -26,7 +26,6 @@ jobs:
           distribution: 'adopt'
       
       - name: Build files
-        if: github.event_name == 'pull_request'
         run: |
           ./gradlew build -x test
         env:
@@ -35,7 +34,6 @@ jobs:
           ARTIFACTORY_URL: ${{ secrets.ARTIFACTORY_URL }}
       
       - name: Do tests
-        if: github.event_name == 'pull_request'
         run: |
           ./gradlew clean test --info build
         env:
@@ -44,7 +42,6 @@ jobs:
           ARTIFACTORY_URL: ${{ secrets.ARTIFACTORY_URL }}
       
       - name: Build Jar
-        if: github.event_name == 'pull_request'
         run: |
           ./gradlew jar --info build
         env:
@@ -53,7 +50,6 @@ jobs:
           ARTIFACTORY_URL: ${{ secrets.ARTIFACTORY_URL }}
       
       - name: SonarQube Analysis
-        if: github.event_name == 'pull_request'
         uses: sonarsource/sonarqube-scan-action@v1
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -64,7 +60,6 @@ jobs:
           serverUrl: 'https://sonarqube.cloud.cms.gov'
       
       - name: Quality Gate Check
-        if: github.event_name == 'pull_request'
         run: |
           status=$(curl -s -u ${{ secrets.SONAR_TOKEN }}: "https://sonarcloud.io/api/qualitygates/project_status?projectKey=<your_project_key>" | jq -r .projectStatus.status)
           echo $status
@@ -76,7 +71,6 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       
       - name: SBOM
-        if: github.event_name == 'pull_request'
         run: |
           ./gradlew cyclonedxBom
         env:
