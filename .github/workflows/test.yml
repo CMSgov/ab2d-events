@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - 'test/*'
+  pull_request:
+    branches:
+      - 'test/*'
 
 env:
   ARTIFACTORY_URL: ${{ secrets.ARTIFACTORY_URL }}
