@@ -25,7 +25,10 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
           gradle: '7.2'
-          
+
+     - name: Generate Gradle Wrapper
+        run: gradle wrapper --gradle-version 7.2
+
       - name: Install dependencies
         run: |
           ./gradlew dependencies      
