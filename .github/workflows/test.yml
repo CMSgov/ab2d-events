@@ -10,7 +10,7 @@ on:
 
 env:
   ARTIFACTORY_URL: ${{ secrets.ARTIFACTORY_URL }}
-  
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,45 +18,34 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      
+
       - name: Set up JDK and Gradle
-        uses: actions/setup-java@v2
+        uses: gradle/gradle-build-action@v2
         with:
           java-version: '17'
-          distribution: 'adopt'
-          gradle: '8.0.2'
-
-      - name: Generate Gradle Wrapper
-        run: gradle wrapper --gradle-version 8.0.2
-
-      - name: Install dependencies
-        run: |
-          ./gradlew dependencies      
+          gradle-version: '8.0.2'
       
       - name: Build files
-        run: |
-          ./gradlew build -x test
+        run: ./gradlew build -x test
         env:
           ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
           ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
           ARTIFACTORY_URL: ${{ secrets.ARTIFACTORY_URL }}
       
       - name: Do tests
-        run: |
-          ./gradlew clean test --info build
+        run: ./gradlew clean test --info build
         env:
           ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
           ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
           ARTIFACTORY_URL: ${{ secrets.ARTIFACTORY_URL }}
-      
+
       - name: Build Jar
-        run: |
-          ./gradlew jar --info build
+        run: ./gradlew jar --info build
         env:
           ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
           ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
           ARTIFACTORY_URL: ${{ secrets.ARTIFACTORY_URL }}
-      
+
       - name: SonarQube Analysis
         uses: sonarsource/sonarqube-scan-action@v1
         env:
@@ -66,7 +55,7 @@ jobs:
           projectName: 'ab2d-events'
           projectKey: 'ab2d-events'
           serverUrl: 'https://sonarqube.cloud.cms.gov'
-      
+
       - name: Quality Gate Check
         run: |
           status=$(curl -s -u ${{ secrets.SONAR_TOKEN }}: "https://sonarcloud.io/api/qualitygates/project_status?projectKey=<your_project_key>" | jq -r .projectStatus.status)
@@ -77,10 +66,9 @@ jobs:
           fi
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      
+
       - name: SBOM
-        run: |
-          ./gradlew cyclonedxBom
+        run: ./gradlew cyclonedxBom
         env:
           ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
           ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
