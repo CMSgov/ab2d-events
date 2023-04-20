@@ -24,10 +24,10 @@ jobs:
         with:
           java-version: '17'
           distribution: 'adopt'
-          gradle: '7.2'
+          gradle: '8.0.2'
 
       - name: Generate Gradle Wrapper
-        run: gradle wrapper --gradle-version 7.2
+        run: gradle wrapper --gradle-version 8.0.2
 
       - name: Install dependencies
         run: |
