@@ -19,10 +19,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up JDK and Gradle
-        uses: gradle/gradle-build-action@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v2
         with:
           java-version: '17'
+          distribution: 'adopt'
+
+      - name: Set Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
           gradle-version: '8.0.2'
       
       - name: Build files
