@@ -1,6 +1,12 @@
 # Ab2d-Events
 
-This service extracts event data from a SQS queue and process it.
+The event service listens and extracts events from the Amazon SQS, then it processes and logs those events.
+
+Processing:
+The events service will process the events(ex. if a job failed) and send a notification to slack channel to notify the team member.
+
+Logging:
+The events service will log the events(ex. error or status message) into the database for future tracking.
 
 ### Running Locally with Intelij
 
@@ -11,10 +17,10 @@ This service extracts event data from a SQS queue and process it.
    ```
 
 Event Service Setup
-2. Select Run/Debug Configuration > Edit Configurations > add configuration (+) > Spring Boot
-3. In Main Class select gov.cms.ab2d.eventlogger.SpringBootApp
-4. Go to 1Password and search for 'Event Service Local Env Variables'. Use the configs in the note for the Environment Variables field
-5. Run the configuration
+1. Select Run/Debug Configuration > Edit Configurations > add configuration (+) > Spring Boot
+2. In Main Class select gov.cms.ab2d.eventlogger.SpringBootApp
+3. Go to 1Password and search for 'Event Service Local Env Variables'. Use the configs in the note for the Environment Variables field
+4. Bring up AB2D and then run the configuration
 
 ### Add new messages to be processed
 1. Follow instructions in the [Events Client](https://github.com/CMSgov/AB2D-Libs/tree/main/ab2d-events-client) to add new messages (events)
