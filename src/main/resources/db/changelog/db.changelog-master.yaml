@@ -147,3 +147,5 @@ databaseChangeLog:
       file: db/changelog/v2022/event-service-database-migration.sql
   - include:
       file: db/changelog/v2022/metrics_table.sql
+  - include:
+      file: db/changelog/v2023/create_sequence_in_event_service_db.sql
