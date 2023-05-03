@@ -30,7 +30,7 @@ jobs:
         uses: gradle/gradle-build-action@v2
       
       - name: Build files
-        run: gradle build -x test
+        run: ./gradlew build -x test
         env:
           ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
           ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
