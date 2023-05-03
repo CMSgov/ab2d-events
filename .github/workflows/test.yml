@@ -30,7 +30,7 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           gradle-version: release-candidate
-      - run: gradle build --dry-run # just test build configuration
+      - run: gradle build --refresh-dependencies # just test build configuration
         env:
           ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
           ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
