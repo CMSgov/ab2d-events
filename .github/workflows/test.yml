@@ -1,7 +1,5 @@
 name: Build and Test
 
-runs-on: self-hosted
-
 on:
   push:
     branches:
