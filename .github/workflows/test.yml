@@ -29,7 +29,7 @@ jobs:
       - name: Set Gradle
         uses: gradle/gradle-build-action@v2
         with:
-          gradle-version: release-candidate
+          gradle-version: 7.4.2
       - run: gradle build --refresh-dependencies --debug # just test build configuration
         env:
           ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
