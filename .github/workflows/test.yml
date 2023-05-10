@@ -36,6 +36,7 @@ jobs:
           ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
           ARTIFACTORY_URL: ${{ secrets.ARTIFACTORY_URL }}
           TEST_VAR: ${{ env.TEST_VAR }}
+          REPO_SECRET: ${{ secret.REPO_SECRET }}
       
       - name: Do tests
         run: ./gradlew clean test --info build
