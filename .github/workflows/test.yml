@@ -39,14 +39,14 @@ jobs:
           REPO_SECRET: ${{ secrets.REPO_SECRET }}
       
       - name: Do tests
-        run: ./gradlew clean test --info build
+        run: gradle clean test --info build
         env:
           ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
           ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
           ARTIFACTORY_URL: ${{ secrets.ARTIFACTORY_URL }}
 
       - name: Build Jar
-        run: ./gradlew jar --info build
+        run: gradle jar --info build
         env:
           ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
           ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
