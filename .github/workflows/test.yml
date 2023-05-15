@@ -60,11 +60,6 @@ jobs:
           ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
           ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
           ARTIFACTORY_URL: ${{ secrets.ARTIFACTORY_URL }}          
-        with:
-          projectBaseDir: '.'
-          projectName: 'ab2d-events'
-          projectKey: 'ab2d-events'
-          serverUrl: 'https://sonarqube.cloud.cms.gov'
 
       - name: Quality Gate Check
         run: |
