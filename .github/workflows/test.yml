@@ -56,6 +56,7 @@ jobs:
         uses: sonarsource/sonarqube-scan-action@v1
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         with:
           projectBaseDir: '.'
           projectName: 'ab2d-events'
@@ -64,7 +65,7 @@ jobs:
 
       - name: Quality Gate Check
         run: |
-          status=$(curl -s -u ${{ secrets.SONAR_TOKEN }}: "https://sonarcloud.io/api/qualitygates/project_status?projectKey=<your_project_key>" | jq -r .projectStatus.status)
+          status=$(curl -s -u ${{ secrets.SONAR_TOKEN }}: "https://sonarqube.cloud.cms.gov/api/qualitygates/project_status?projectKey=ab2d-events" | jq -r .projectStatus.status)
           echo $status
           if [ "$status" != "OK" ]; then
             echo "Quality Gate failed"
@@ -74,7 +75,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: SBOM
-        run: ./gradlew cyclonedxBom
+        run: gradle cyclonedxBom
         env:
           ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
           ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
