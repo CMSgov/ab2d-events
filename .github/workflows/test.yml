@@ -53,10 +53,13 @@ jobs:
           ARTIFACTORY_URL: ${{ secrets.ARTIFACTORY_URL }}
 
       - name: SonarQube Analysis
-        uses: sonarsource/sonarqube-scan-action@master
+        run: gradle sonarqube -Dsonar.projectKey=ab2d-events -Dsonar.host.url=https://sonarqube.cloud.cms.gov
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
+          ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
+          ARTIFACTORY_URL: ${{ secrets.ARTIFACTORY_URL }}          
         with:
           projectBaseDir: '.'
           projectName: 'ab2d-events'
