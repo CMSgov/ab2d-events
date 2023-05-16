@@ -1,19 +1,20 @@
-name: Build and Test
+name: Test
 
 
 on:
   push:
-    branches:
-      - 'test/*'
-  pull_request:
-    branches:
-      - 'test/*'
+    branches-ignore:
+      - 'main'
 
 env:
+  ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
+  ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
   ARTIFACTORY_URL: ${{ secrets.ARTIFACTORY_URL }}
+  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
 jobs:
-  build:
+  Test:
     runs-on: self-hosted
 
     steps:
@@ -30,36 +31,19 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           gradle-version: 7.4.2
-      - run: gradle build --refresh-dependencies --debug # just test build configuration
-        env:
-          ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
-          ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
-          ARTIFACTORY_URL: ${{ secrets.ARTIFACTORY_URL }}
-          TEST_VAR: ${{ env.TEST_VAR }}
-          REPO_SECRET: ${{ secrets.REPO_SECRET }}
+
+      - name: Set gradle dependencies    
+        run: gradle build --refresh-dependencies --debug # just test build configuration
+
       
-      - name: Do tests
+      - name: Do Test
         run: gradle clean test --info build
-        env:
-          ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
-          ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
-          ARTIFACTORY_URL: ${{ secrets.ARTIFACTORY_URL }}
 
       - name: Build Jar
         run: gradle jar --info build
-        env:
-          ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
-          ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
-          ARTIFACTORY_URL: ${{ secrets.ARTIFACTORY_URL }}
 
       - name: SonarQube Analysis
-        run: gradle sonarqube -Dsonar.projectKey=ab2d-events -Dsonar.host.url=https://sonarqube.cloud.cms.gov
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-          ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
-          ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
-          ARTIFACTORY_URL: ${{ secrets.ARTIFACTORY_URL }}          
+        run: gradle sonarqube -Dsonar.projectKey=ab2d-events -Dsonar.host.url=https://sonarqube.cloud.cms.gov        
 
       - name: Quality Gate Check
         run: |
@@ -69,12 +53,4 @@ jobs:
             echo "Quality Gate failed"
             exit 1
           fi
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-      - name: SBOM
-        run: gradle cyclonedxBom
-        env:
-          ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
-          ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
-          ARTIFACTORY_URL: ${{ secrets.ARTIFACTORY_URL }}
