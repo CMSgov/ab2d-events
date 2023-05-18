@@ -1,6 +1,5 @@
 name: Test
 
-
 on:
   push:
     branches-ignore:
@@ -35,7 +34,6 @@ jobs:
       - name: Set gradle dependencies    
         run: gradle build --refresh-dependencies --debug # just test build configuration
 
-      
       - name: Do Test
         run: gradle clean test --info build
 
@@ -53,4 +51,3 @@ jobs:
             echo "Quality Gate failed"
             exit 1
           fi
-
