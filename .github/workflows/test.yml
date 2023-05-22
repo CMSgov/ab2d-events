@@ -1,0 +1,53 @@
+name: Test
+
+on:
+  push:
+    branches-ignore:
+      - 'main'
+
+env:
+  ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
+  ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
+  ARTIFACTORY_URL: ${{ secrets.ARTIFACTORY_URL }}
+  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+jobs:
+  Test:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+
+      - name: Set Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: 7.4.2
+
+      - name: Set gradle dependencies    
+        run: gradle build --refresh-dependencies --debug # just test build configuration
+
+      - name: Do Test
+        run: gradle clean test --info build
+
+      - name: Build Jar
+        run: gradle jar --info build
+
+      - name: SonarQube Analysis
+        run: gradle sonarqube -Dsonar.projectKey=ab2d-events -Dsonar.host.url=https://sonarqube.cloud.cms.gov        
+
+      - name: Quality Gate Check
+        run: |
+          status=$(curl -s -u ${{ secrets.SONAR_TOKEN }}: "https://sonarqube.cloud.cms.gov/api/qualitygates/project_status?projectKey=ab2d-events" | jq -r .projectStatus.status)
+          echo $status
+          if [ "$status" != "OK" ]; then
+            echo "Quality Gate failed"
+            exit 1
+          fi
