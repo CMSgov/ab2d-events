@@ -5,8 +5,8 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 plugins {
     id 'java'
     id 'org.springframework.boot' version "2.7.6"
-    id 'com.jfrog.artifactory' version '4.31.3' apply false
-    id "org.sonarqube" version "4.0.0.2929"
+    id 'com.jfrog.artifactory' version '4.32.0' apply false
+    id "org.sonarqube" version "4.1.0.3113"
     id "gov.cms.ab2d.plugin" version "1.0.2"
     id 'maven-publish'
     id 'org.cyclonedx.bom' version '1.7.4' apply true
@@ -17,15 +17,15 @@ group = "gov.cms.ab2d"
 
 ext {
     springBootVersion= '2.7.6'
-    liquibaseVersion="4.19.0"
-    jacksonVersion="2.14.2"
+    liquibaseVersion="4.22.0"
+    jacksonVersion="2.15.2"
 }
 
 allprojects {
     apply plugin: 'gov.cms.ab2d.plugin'
     apply plugin: "org.cyclonedx.bom"
     dependencies {
-        implementation "com.squareup.okhttp3:okhttp:4.10.0"
+        implementation "com.squareup.okhttp3:okhttp:4.11.0"
         implementation "org.springframework.boot:spring-boot-starter:${springBootVersion}"
         implementation "org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}"
         implementation 'org.springframework:spring-web:5.3.24'
@@ -40,16 +40,16 @@ allprojects {
         implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${jacksonVersion}"
         implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
         implementation "gov.cms.ab2d:ab2d-events-client:1.11.4"
-        implementation 'com.slack.api:slack-api-client:1.27.3'
+        implementation 'com.slack.api:slack-api-client:1.29.2'
         runtimeOnly "javax.xml.bind:jaxb-api:2.4.0-b180830.0359"
-        runtimeOnly 'org.postgresql:postgresql:42.5.4'
+        runtimeOnly 'org.postgresql:postgresql:42.6.0'
         testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
-        testImplementation "commons-io:commons-io:2.11.0"
+        testImplementation "commons-io:commons-io:2.12.0"
         testImplementation 'org.springframework.data:spring-data-jpa:2.7.6'
         testImplementation "org.liquibase:liquibase-core:${liquibaseVersion}"
-        testImplementation "org.testcontainers:localstack:1.17.6"
+        testImplementation "org.testcontainers:localstack:1.18.2"
         compileOnly "org.cyclonedx:cyclonedx-gradle-plugin:1.4.0"
-        compileOnly 'org.cyclonedx:cyclonedx-core-java:7.3.1'
+        compileOnly 'org.cyclonedx:cyclonedx-core-java:7.3.2'
     }
 
     cyclonedxBom {
