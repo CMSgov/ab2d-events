@@ -55,12 +55,12 @@ jobs:
       - name: Run tests
         run: gradle test ${RUNNER_DEBUG:+"--debug"}
 
-      - name: SonarQube Analysis
+      - name: SonarQube analysis
         run: gradle sonarqube -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.host.url=$SONAR_HOST_URL
 
-      - name: Quality Gate Check
+      - name: Check SonarQube quality gate
         run: |
-          status=$(curl -s --header "Authorization: Bearer $SONAR_TOKEN" "$SONAR_HOST_URL/api/qualitygates/project_status?projectKey=$SONAR_PROJECT_KEY" | jq -r .projectStatus.status)
+          status=$(curl -s -u "$SONAR_TOKEN:" "$SONAR_HOST_URL/api/qualitygates/project_status?projectKey=$SONAR_PROJECT_KEY" | jq -r .projectStatus.status)
           echo $status
           if [ "$status" != "OK" ]; then
             echo "Quality Gate failed"
