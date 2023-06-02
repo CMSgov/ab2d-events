@@ -33,20 +33,22 @@ jobs:
 
       - name: Set env vars
         run: |
-          artifactory_url=$(aws ssm get-parameter --name /artifactory/url)
+          alias param="aws ssm get-parameter --output text --query Parameter.Value --with-decryption --name"
+
+          artifactory_url="$(param /artifactory/url)"
           echo "ARTIFACTORY_URL=$artifactory_url" >> "$GITHUB_ENV"
 
-          artifactory_user=$(aws ssm get-parameter --name /artifactory/user)
+          artifactory_user="$(param /artifactory/user)"
           echo "ARTIFACTORY_USER=$artifactory_user" >> "$GITHUB_ENV"
 
-          artifactory_password=$(aws ssm get-parameter --name /artifactory/password --with-decryption)
+          artifactory_password="$(param /artifactory/password)"
           echo "::add-mask::$artifactory_password"
           echo "ARTIFACTORY_PASSWORD=$artifactory_password" >> "$GITHUB_ENV"
 
-          sonarqube_url=$(aws ssm get-parameter --name /sonarqube/url)
+          sonarqube_url="$(param /sonarqube/url)"
           echo "SONAR_HOST_URL=$sonarqube_url" >> "$GITHUB_ENV"
 
-          sonarqube_token=$(aws ssm get-parameter --name /sonarqube/token --with-decryption)
+          sonarqube_token="$(param /sonarqube/token)"
           echo "::add-mask::$sonarqube_token"
           echo "SONAR_TOKEN=$sonarqube_token" >> "$GITHUB_ENV"
 
