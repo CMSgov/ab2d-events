@@ -33,6 +33,7 @@ jobs:
 
       - name: Set env vars
         run: |
+          shopt -s expand_aliases # https://github.com/actions/toolkit/issues/766#issuecomment-928305811
           alias param="aws ssm get-parameter --output text --query Parameter.Value --with-decryption --name"
 
           artifactory_url="$(param /artifactory/url)"
