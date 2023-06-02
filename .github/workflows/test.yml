@@ -31,7 +31,26 @@ jobs:
         with:
           gradle-version: 7.4.2
 
-      - name: Set gradle dependencies    
+      - name: Set env vars
+        run: |
+          artifactory_url=$(aws ssm get-parameter --name /artifactory/url)
+          echo "ARTIFACTORY_URL=$artifactory_url" >> "$GITHUB_ENV"
+
+          artifactory_user=$(aws ssm get-parameter --name /artifactory/user)
+          echo "ARTIFACTORY_USER=$artifactory_user" >> "$GITHUB_ENV"
+
+          artifactory_password=$(aws ssm get-parameter --name /artifactory/password --with-decryption)
+          echo "::add-mask::$artifactory_password"
+          echo "ARTIFACTORY_PASSWORD=$artifactory_password" >> "$GITHUB_ENV"
+
+          sonarqube_url=$(aws ssm get-parameter --name /sonarqube/url)
+          echo "SONAR_HOST_URL=$sonarqube_url" >> "$GITHUB_ENV"
+
+          sonarqube_token=$(aws ssm get-parameter --name /sonarqube/token --with-decryption)
+          echo "::add-mask::$sonarqube_token"
+          echo "SONAR_TOKEN=$sonarqube_token" >> "$GITHUB_ENV"
+
+      - name: Set gradle dependencies
         run: gradle build --refresh-dependencies --debug # just test build configuration
 
       - name: Do Test
@@ -41,11 +60,11 @@ jobs:
         run: gradle jar --info build
 
       - name: SonarQube Analysis
-        run: gradle sonarqube -Dsonar.projectKey=ab2d-events -Dsonar.host.url=https://sonarqube.cloud.cms.gov        
+        run: gradle sonarqube -Dsonar.projectKey=ab2d-events -Dsonar.host.url=https://sonarqube.cloud.cms.gov
 
       - name: Quality Gate Check
         run: |
-          status=$(curl -s -u ${{ secrets.SONAR_TOKEN }}: "https://sonarqube.cloud.cms.gov/api/qualitygates/project_status?projectKey=ab2d-events" | jq -r .projectStatus.status)
+          status=$(curl -s --header "Authorization: Bearer $SONAR_TOKEN" "https://sonarqube.cloud.cms.gov/api/qualitygates/project_status?projectKey=ab2d-events" | jq -r .projectStatus.status)
           echo $status
           if [ "$status" != "OK" ]; then
             echo "Quality Gate failed"
