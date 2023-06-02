@@ -6,11 +6,7 @@ on:
       - 'main'
 
 env:
-  ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
-  ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
-  ARTIFACTORY_URL: ${{ secrets.ARTIFACTORY_URL }}
-  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-  SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+  SONAR_PROJECT_KEY: ${{ vars.SONAR_PROJECT_KEY }}
 
 jobs:
   Test:
@@ -57,11 +53,11 @@ jobs:
         run: gradle test ${RUNNER_DEBUG:+"--debug"}
 
       - name: SonarQube Analysis
-        run: gradle sonarqube -Dsonar.projectKey=ab2d-events -Dsonar.host.url=$SONAR_HOST_URL
+        run: gradle sonarqube -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.host.url=$SONAR_HOST_URL
 
       - name: Quality Gate Check
         run: |
-          status=$(curl -s --header "Authorization: Bearer $SONAR_TOKEN" "$SONAR_HOST_URL/api/qualitygates/project_status?projectKey=ab2d-events" | jq -r .projectStatus.status)
+          status=$(curl -s --header "Authorization: Bearer $SONAR_TOKEN" "$SONAR_HOST_URL/api/qualitygates/project_status?projectKey=$SONAR_PROJECT_KEY" | jq -r .projectStatus.status)
           echo $status
           if [ "$status" != "OK" ]; then
             echo "Quality Gate failed"
