@@ -49,9 +49,6 @@ jobs:
           echo "::add-mask::$sonarqube_token"
           echo "SONAR_TOKEN=$sonarqube_token" >> "$GITHUB_ENV"
 
-      - name: Build
-        run: gradle build ${RUNNER_DEBUG:+"--debug"}
-
       - name: Run tests
         run: gradle test ${RUNNER_DEBUG:+"--debug"}
 
