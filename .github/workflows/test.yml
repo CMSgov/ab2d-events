@@ -6,11 +6,7 @@ on:
       - 'main'
 
 env:
-  ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
-  ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
-  ARTIFACTORY_URL: ${{ secrets.ARTIFACTORY_URL }}
-  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-  SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+  SONAR_PROJECT_KEY: ${{ vars.SONAR_PROJECT_KEY }}
 
 jobs:
   Test:
@@ -31,21 +27,37 @@ jobs:
         with:
           gradle-version: 7.4.2
 
-      - name: Set gradle dependencies    
-        run: gradle build --refresh-dependencies --debug # just test build configuration
-
-      - name: Do Test
-        run: gradle clean test --info build
-
-      - name: Build Jar
-        run: gradle jar --info build
-
-      - name: SonarQube Analysis
-        run: gradle sonarqube -Dsonar.projectKey=ab2d-events -Dsonar.host.url=https://sonarqube.cloud.cms.gov        
-
-      - name: Quality Gate Check
+      - name: Set env vars
         run: |
-          status=$(curl -s -u ${{ secrets.SONAR_TOKEN }}: "https://sonarqube.cloud.cms.gov/api/qualitygates/project_status?projectKey=ab2d-events" | jq -r .projectStatus.status)
+          shopt -s expand_aliases # https://github.com/actions/toolkit/issues/766#issuecomment-928305811
+          alias param="aws ssm get-parameter --output text --query Parameter.Value --with-decryption --name"
+
+          artifactory_url="$(param /artifactory/url)"
+          echo "ARTIFACTORY_URL=$artifactory_url" >> "$GITHUB_ENV"
+
+          artifactory_user="$(param /artifactory/user)"
+          echo "ARTIFACTORY_USER=$artifactory_user" >> "$GITHUB_ENV"
+
+          artifactory_password="$(param /artifactory/password)"
+          echo "::add-mask::$artifactory_password"
+          echo "ARTIFACTORY_PASSWORD=$artifactory_password" >> "$GITHUB_ENV"
+
+          sonarqube_url="$(param /sonarqube/url)"
+          echo "SONAR_HOST_URL=$sonarqube_url" >> "$GITHUB_ENV"
+
+          sonarqube_token="$(param /sonarqube/token)"
+          echo "::add-mask::$sonarqube_token"
+          echo "SONAR_TOKEN=$sonarqube_token" >> "$GITHUB_ENV"
+
+      - name: Run tests
+        run: gradle test ${RUNNER_DEBUG:+"--debug"}
+
+      - name: SonarQube analysis
+        run: gradle sonarqube -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.host.url=$SONAR_HOST_URL
+
+      - name: Check SonarQube quality gate
+        run: |
+          status=$(curl -s -u "$SONAR_TOKEN:" "$SONAR_HOST_URL/api/qualitygates/project_status?projectKey=$SONAR_PROJECT_KEY" | jq -r .projectStatus.status)
           echo $status
           if [ "$status" != "OK" ]; then
             echo "Quality Gate failed"
