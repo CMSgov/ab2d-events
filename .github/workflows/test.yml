@@ -61,6 +61,3 @@ jobs:
         with:
           scanMetadataReportFile: build/sonar/report-task.txt
         timeout-minutes: 5
-        env:
-          SONAR_TOKEN: ${{ vars.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
