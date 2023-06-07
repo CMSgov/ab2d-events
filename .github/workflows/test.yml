@@ -50,7 +50,7 @@ jobs:
         run: gradle test ${RUNNER_DEBUG:+"--debug"}
 
       - name: SonarQube analysis
-        run: gradle sonarqube -Dsonar.host.url=$SONAR_HOST_URL
+        run: gradle sonar -Dsonar.host.url=$SONAR_HOST_URL
 
       - name: SonarQube Quality Gate check
         id: sonarqube-quality-gate-check
