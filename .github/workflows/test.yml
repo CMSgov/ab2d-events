@@ -5,9 +5,6 @@ on:
     branches-ignore:
       - 'main'
 
-env:
-  SONAR_PROJECT_KEY: ${{ vars.SONAR_PROJECT_KEY }}
-
 jobs:
   Test:
     runs-on: self-hosted
@@ -53,7 +50,7 @@ jobs:
         run: gradle test ${RUNNER_DEBUG:+"--debug"}
 
       - name: SonarQube analysis
-        run: gradle sonarqube -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.host.url=$SONAR_HOST_URL
+        run: gradle sonarqube -Dsonar.host.url=$SONAR_HOST_URL
 
       - name: SonarQube Quality Gate check
         id: sonarqube-quality-gate-check

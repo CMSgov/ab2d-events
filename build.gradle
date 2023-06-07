@@ -15,12 +15,6 @@ plugins {
 version="1.1.0"
 group = "gov.cms.ab2d"
 
-sonar {
-  properties {
-    property "sonar.projectKey", "ab2d-events"
-  }
-}
-
 ext {
     springBootVersion= '2.7.6'
     liquibaseVersion="4.22.0"
