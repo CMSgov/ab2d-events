@@ -58,3 +58,4 @@ jobs:
         with:
           scanMetadataReportFile: build/sonar/report-task.txt
         timeout-minutes: 5
+
