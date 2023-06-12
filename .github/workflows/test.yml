@@ -26,6 +26,8 @@ jobs:
 
       - name: Set env vars from AWS params
         uses: gsf/aws-params-env-action@v1
+        env:
+          AWS_REGION: ${{ vars.AWS_REGION }}
         with:
           params: |
             ARTIFACTORY_URL=/artifactory/url
