@@ -32,7 +32,7 @@ allprojects {
         implementation "org.springframework.boot:spring-boot-starter-jdbc:${springBootVersion}"
         implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
         implementation "org.springframework.cloud:spring-cloud-starter-aws-messaging:2.2.6.RELEASE"
-        implementation "commons-codec:commons-codec:1.15"
+        implementation "commons-codec:commons-codec:1.16.0"
         implementation "javax.servlet:javax.servlet-api:4.0.1"
         implementation "org.liquibase:liquibase-core:${liquibaseVersion}"
         implementation "com.amazonaws:amazon-kinesis-client:1.14.10"
