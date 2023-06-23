@@ -16,7 +16,7 @@ version="1.1.0"
 group = "gov.cms.ab2d"
 
 ext {
-    springBootVersion= '2.7.6'
+    springBootVersion= '3.1.1'
     liquibaseVersion="4.22.0"
     jacksonVersion="2.15.2"
 }
