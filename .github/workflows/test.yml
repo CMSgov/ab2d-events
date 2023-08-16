@@ -25,7 +25,7 @@ jobs:
           gradle-version: 7.4.2
 
       - name: Set env vars from AWS params
-        uses: gsf/aws-params-env-action@v1
+        uses: cmsgov/ab2d-bcda-dpc-platform/actions/aws-params-env-action@plt-142-aws-param-action
         env:
           AWS_REGION: ${{ vars.AWS_REGION }}
         with:
