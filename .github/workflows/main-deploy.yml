@@ -28,6 +28,7 @@ jobs:
         uses: cmsgov/ab2d-bcda-dpc-platform/actions/aws-params-env-action@main
         env:
           AWS_REGION: ${{ vars.AWS_REGION }}
+          CLOUD_TAMER: ${{ vars.CLOUD_TAMER }}
         with:
           params: |
             ARTIFACTORY_URL=/artifactory/url
