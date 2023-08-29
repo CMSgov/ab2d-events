@@ -28,7 +28,6 @@ jobs:
         uses: cmsgov/ab2d-bcda-dpc-platform/actions/aws-params-env-action@main
         env:
           AWS_REGION: ${{ vars.AWS_REGION }}
-          CLOUD_TAMER: ${{ vars.CLOUD_TAMER }}
         with:
           params: |
             ARTIFACTORY_URL=/artifactory/url
@@ -41,6 +40,8 @@ jobs:
         run: gradle -b build.gradle bootJar -Dset.root.project.build.filename=true
 
       - name: Build Docker Image
+        env:
+          CLOUD_TAMER: ${{ vars.CLOUD_TAMER }}
         run: ./scripts/build-docker-image.sh   
 
 
