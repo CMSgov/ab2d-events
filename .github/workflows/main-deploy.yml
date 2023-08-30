@@ -41,7 +41,7 @@ jobs:
 
       - name: Build Docker Image
         env:
-          CLOUD_TAMER: ${{ vars.CLOUD_TAMER }}
+          CLOUD_TAMER: true
         run: ./scripts/build-docker-image.sh   
 
 
