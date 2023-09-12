@@ -4,7 +4,7 @@ set -e # Turn on exit on error
 
 # Export environmental variables
 AWS_ACCOUNT_ID="330810004472"
-ECR_REPO_ENV="IMPL"
+ECR_REPO_ENV="ab2d-impl-services"
 DEPLOYMENT_ENV="IMPL"
 ASSUMED_ROLE_ARN="arn:aws:iam::330810004472:role/delegatedadmin/developer/github-actions-runner-role" 
 
