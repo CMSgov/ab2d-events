@@ -6,7 +6,7 @@ set -e # Turn on exit on error
 AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID
 ECR_REPO_ENV=$ECR_REPO_ENV
 DEPLOYMENT_ENV=$DEPLOYMENT_ENV
-ASSUMED_ROLE_ARN="arn:aws:iam::=$AWS_ACCOUNT_ID:role/github-actions-runner-role" 
+ASSUMED_ROLE_ARN="arn:aws:iam::330810004472:role/delegatedadmin/developer/github-actions-runner-role" 
 
 # Set default AWS region and tag
 export AWS_DEFAULT_REGION="us-east-1"
