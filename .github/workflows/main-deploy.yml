@@ -1,7 +1,7 @@
-name: Deploy-Main
+name: IMPL-Deploy
 
 on:
-  push:
+  merge:
     branches-ignore:
       - 'main'
 
@@ -42,6 +42,6 @@ jobs:
       - name: Build Docker Image
         env:
           CLOUD_TAMER: false
-        run: ./scripts/build-docker-image-actions.sh   
+        run: ./scripts/build-docker-image-impl-actions.sh   
 
 
