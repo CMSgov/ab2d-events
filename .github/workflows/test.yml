@@ -6,7 +6,7 @@ on:
       - 'main'
 
 jobs:
-  Test:
+  test:
     runs-on: self-hosted
 
     steps:
@@ -24,27 +24,17 @@ jobs:
         with:
           gradle-version: 7.4.2
 
-      - name: Set env vars
-        run: |
-          shopt -s expand_aliases # https://github.com/actions/toolkit/issues/766#issuecomment-928305811
-          alias param="aws ssm get-parameter --output text --query Parameter.Value --with-decryption --name"
-
-          artifactory_url="$(param /artifactory/url)"
-          echo "ARTIFACTORY_URL=$artifactory_url" >> "$GITHUB_ENV"
-
-          artifactory_user="$(param /artifactory/user)"
-          echo "ARTIFACTORY_USER=$artifactory_user" >> "$GITHUB_ENV"
-
-          artifactory_password="$(param /artifactory/password)"
-          echo "::add-mask::$artifactory_password"
-          echo "ARTIFACTORY_PASSWORD=$artifactory_password" >> "$GITHUB_ENV"
-
-          sonarqube_url="$(param /sonarqube/url)"
-          echo "SONAR_HOST_URL=$sonarqube_url" >> "$GITHUB_ENV"
-
-          sonarqube_token="$(param /sonarqube/token)"
-          echo "::add-mask::$sonarqube_token"
-          echo "SONAR_TOKEN=$sonarqube_token" >> "$GITHUB_ENV"
+      - name: Set env vars from AWS params
+        uses: cmsgov/ab2d-bcda-dpc-platform/actions/aws-params-env-action@main
+        env:
+          AWS_REGION: ${{ vars.AWS_REGION }}
+        with:
+          params: |
+            ARTIFACTORY_URL=/artifactory/url
+            ARTIFACTORY_USER=/artifactory/user
+            ARTIFACTORY_PASSWORD=/artifactory/password
+            SONAR_HOST_URL=/sonarqube/url
+            SONAR_TOKEN=/sonarqube/token
 
       - name: Run tests
         run: gradle test ${RUNNER_DEBUG:+"--debug"}
