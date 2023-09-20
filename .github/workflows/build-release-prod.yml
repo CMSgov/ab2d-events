@@ -40,17 +40,17 @@ jobs:
         run: |
           gradle -b build.gradle bootJar -Dset.root.project.build.filename=true
 
-      - name: Build Docker Image
-        env:
-          ACCOUNT_NUMBER: ${{ vars.PROD_ACCOUNT_NUMBER }}
-          ECR_REPO_ENV: "ab2d-prod-services"
-        run: ./scripts/github-actions-build-docker-image.sh
-
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
           aws-region: us-east-1
           role-to-assume: arn:aws:iam::${{ vars.PROD_ACCOUNT_NUMBER }}:role/delegatedadmin/developer/github-actions-runner-role
+
+      - name: Build Docker Image
+        env:
+          ACCOUNT_NUMBER: ${{ vars.PROD_ACCOUNT_NUMBER }}
+          ECR_REPO_ENV: "ab2d-prod-services"
+        run: ./scripts/github-actions-build-docker-image.sh
 
       - name: release to ecs 
         env:
