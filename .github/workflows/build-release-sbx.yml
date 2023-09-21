@@ -1,9 +1,11 @@
 name: build-and-release-sbx
 
+
 on:
-  push:
-    branches-ignore:
-      - 'main'
+  workflow_dispatch:
+  release:
+    types:
+      - released
 
 jobs:
   release:
@@ -40,7 +42,7 @@ jobs:
         run: |
           gradle -b build.gradle bootJar -Dset.root.project.build.filename=true
 
-      - name: Configure AWS Credentials
+      - name: Assume role in target account
         uses: aws-actions/configure-aws-credentials@v3
         with:
           aws-region: us-east-1
@@ -50,12 +52,12 @@ jobs:
         env:
           ACCOUNT_NUMBER: ${{ vars.SBX_ACCOUNT_NUMBER }}
           ECR_REPO_ENV: "ab2d-sbx-services"
+          AWS_REGION: "us-east-1"
         run: ./scripts/github-actions-build-docker-image.sh
 
 
       - name: release to ecs 
         env:
-          ACCOUNT_NUMBER: ${{ vars.SBX_ACCOUNT_NUMBER }}
-          ECR_REPO_ENV: "ab2d-sbx-services"
           DEPLOYMENT_ENV: "ab2d-sbx-sandbox"
+          AWS_REGION: "us-east-1"
         run: ./scripts/github-actions-release.sh

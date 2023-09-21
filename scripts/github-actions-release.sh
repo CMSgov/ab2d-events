@@ -4,9 +4,6 @@ set -e # Turn on exit on error
 
 # Set default AWS region and tag
 
-export AWS_DEFAULT_REGION="us-east-1"
-export IMAGE_TAG="event-service"
-
 #
 ######## update ECS service with new image ################
 #

@@ -1,11 +1,6 @@
 name: build-and-release-dev
 
-on:
-  push:
-    branches-ignore:
-      - 'main'
-
-#on: workflow_dispatch
+on: workflow_dispatch
 
 
 jobs:
@@ -43,7 +38,7 @@ jobs:
         run: |
           gradle -b build.gradle bootJar -Dset.root.project.build.filename=true
 
-      - name: Configure AWS Credentials
+      - name: Assume role in target account
         uses: aws-actions/configure-aws-credentials@v3
         with:
           aws-region: us-east-1
@@ -53,11 +48,11 @@ jobs:
         env:
           ACCOUNT_NUMBER: ${{ vars.DEV_ACCOUNT_NUMBER }}
           ECR_REPO_ENV: "ab2d-dev-services"
+          AWS_REGION: "us-east-1"
         run: ./scripts/github-actions-build-docker-image.sh
 
       - name: release to ecs 
         env:
-          ACCOUNT_NUMBER: ${{ vars.DEV_ACCOUNT_NUMBER }}
-          ECR_REPO_ENV: "ab2d-dev-services"
           DEPLOYMENT_ENV: "ab2d-dev"
+          AWS_REGION: "us-east-1"
         run: ./scripts/github-actions-release.sh
