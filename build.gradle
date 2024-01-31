@@ -16,9 +16,10 @@ version="1.1.0"
 group = "gov.cms.ab2d"
 
 ext {
-    springBootVersion= '2.7.6'
-    liquibaseVersion="4.22.0"
-    jacksonVersion="2.15.2"
+    springBootVersion = '2.7.6'
+    springCloudAwsVersion = '2.4.4'
+    liquibaseVersion = "4.22.0"
+    jacksonVersion = "2.15.2"
 }
 
 allprojects {
@@ -31,7 +32,11 @@ allprojects {
         implementation 'org.springframework:spring-web:5.3.24'
         implementation "org.springframework.boot:spring-boot-starter-jdbc:${springBootVersion}"
         implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
-        implementation "org.springframework.cloud:spring-cloud-starter-aws-messaging:2.2.6.RELEASE"
+        implementation("io.awspring.cloud:spring-cloud-aws-dependencies:$springCloudAwsVersion")
+        implementation("io.awspring.cloud:spring-cloud-aws-core:${springCloudAwsVersion}")
+        implementation("io.awspring.cloud:spring-cloud-aws-autoconfigure:${springCloudAwsVersion}")
+        implementation "io.awspring.cloud:spring-cloud-starter-aws:${springCloudAwsVersion}"
+        implementation "io.awspring.cloud:spring-cloud-aws-messaging:${springCloudAwsVersion}"
         implementation "commons-codec:commons-codec:1.15"
         implementation "javax.servlet:javax.servlet-api:4.0.1"
         implementation "org.liquibase:liquibase-core:${liquibaseVersion}"
