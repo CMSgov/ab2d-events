@@ -26,8 +26,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import io.awspring.cloud.autoconfigure.messaging.SqsAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -43,6 +45,7 @@ import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 @Testcontainers
+@EnableAutoConfiguration(exclude = {SqsAutoConfiguration.class})
 public class SendAndReceiveSqsEventTest {
 
     static {
