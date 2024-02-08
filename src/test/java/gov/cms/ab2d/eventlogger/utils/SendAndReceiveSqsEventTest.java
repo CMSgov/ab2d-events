@@ -45,7 +45,7 @@ import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 @Testcontainers
-@EnableAutoConfiguration(exclude = {SqsAutoConfiguration.class})
+// @EnableAutoConfiguration(exclude = {SqsAutoConfiguration.class})
 public class SendAndReceiveSqsEventTest {
 
     static {
