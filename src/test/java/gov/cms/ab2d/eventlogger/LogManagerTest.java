@@ -31,7 +31,7 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @Testcontainers
-// @EnableAutoConfiguration(exclude = {SqsAutoConfiguration.class})
+@EnableAutoConfiguration(exclude = {SqsAutoConfiguration.class})
 class LogManagerTest {
     @Container
     private static final PostgreSQLContainer POSTGRE_SQL_CONTAINER = new AB2DPostgresqlContainer();
