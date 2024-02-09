@@ -42,7 +42,8 @@ allprojects {
         implementation "com.fasterxml.jackson.module:jackson-module-parameter-names:${jacksonVersion}"
         implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${jacksonVersion}"
         implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
-        implementation "gov.cms.ab2d:ab2d-events-client:1.12.2"
+        // implementation "gov.cms.ab2d:ab2d-events-client:1.12.2"
+        implementation "gov.cms.ab2d:ab2d-events-client:1.11.4"
         implementation 'com.slack.api:slack-api-client:1.29.2'
         runtimeOnly "javax.xml.bind:jaxb-api:2.4.0-b180830.0359"
         runtimeOnly 'org.postgresql:postgresql:42.6.0'
