@@ -58,8 +58,7 @@ public class SendAndReceiveSqsEventTest {
     @Container
     private static final AB2DLocalstackContainer LOCALSTACK_CONTAINER = new AB2DLocalstackContainer();
 
-    // @Autowired
-    @MockBean
+    @Autowired
     private SQSEventClient sendSQSEvent;
 
     @Autowired
