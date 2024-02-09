@@ -17,6 +17,7 @@ group = "gov.cms.ab2d"
 
 ext {
     springBootVersion= '2.7.6'
+    springCloudAwsVersion = '2.4.4'
     liquibaseVersion="4.22.0"
     jacksonVersion="2.15.2"
 }
@@ -31,7 +32,7 @@ allprojects {
         implementation 'org.springframework:spring-web:5.3.24'
         implementation "org.springframework.boot:spring-boot-starter-jdbc:${springBootVersion}"
         implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
-        implementation "org.springframework.cloud:spring-cloud-starter-aws-messaging:2.2.6.RELEASE"
+        implementation "io.awspring.cloud:spring-cloud-aws-messaging:${springCloudAwsVersion}"
         implementation "commons-codec:commons-codec:1.15"
         implementation "javax.servlet:javax.servlet-api:4.0.1"
         implementation "org.liquibase:liquibase-core:${liquibaseVersion}"
@@ -39,7 +40,7 @@ allprojects {
         implementation "com.fasterxml.jackson.module:jackson-module-parameter-names:${jacksonVersion}"
         implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${jacksonVersion}"
         implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
-        implementation "gov.cms.ab2d:ab2d-events-client:1.11.4"
+        implementation "gov.cms.ab2d:ab2d-events-client:1.12.2"
         implementation 'com.slack.api:slack-api-client:1.29.2'
         runtimeOnly "javax.xml.bind:jaxb-api:2.4.0-b180830.0359"
         runtimeOnly 'org.postgresql:postgresql:42.6.0'
