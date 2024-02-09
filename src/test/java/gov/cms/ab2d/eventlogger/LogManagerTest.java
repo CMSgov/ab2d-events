@@ -16,9 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import io.awspring.cloud.autoconfigure.messaging.SqsAutoConfiguration;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -31,7 +29,6 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @Testcontainers
-@EnableAutoConfiguration(exclude = {SqsAutoConfiguration.class})
 class LogManagerTest {
     @Container
     private static final PostgreSQLContainer POSTGRE_SQL_CONTAINER = new AB2DPostgresqlContainer();

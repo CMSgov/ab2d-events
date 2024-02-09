@@ -46,7 +46,6 @@ import static org.mockito.Mockito.verify;
 @Testcontainers
 @EnableAutoConfiguration(
     exclude = {
-        io.awspring.cloud.autoconfigure.messaging.SqsAutoConfiguration.class,
         io.awspring.cloud.autoconfigure.context.ContextInstanceDataAutoConfiguration.class,
         io.awspring.cloud.autoconfigure.context.ContextStackAutoConfiguration.class,
         io.awspring.cloud.autoconfigure.context.ContextRegionProviderAutoConfiguration.class,
