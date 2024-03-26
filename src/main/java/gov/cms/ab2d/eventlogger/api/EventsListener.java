@@ -27,6 +27,7 @@ public class EventsListener {
 
     @SqsListener(value = "${sqs.queue-name}", deletionPolicy = SqsMessageDeletionPolicy.ON_SUCCESS)
     public void processEvents(SQSMessages sqsMessage) {
+        log.info("Ignore me. I'm for tests");
         log.info("EventsListener: Processing events from SQS: " + sqsMessage.getClass().getSimpleName());
         switch (sqsMessage.getClass().getSimpleName()) {
             case "GeneralSQSMessage" ->
