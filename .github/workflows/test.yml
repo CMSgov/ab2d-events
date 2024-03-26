@@ -1,9 +1,6 @@
 name: Test
 
 on: workflow_dispatch
-  push:
-    branches-ignore:
-      - 'main'
 
 jobs:
   test:
