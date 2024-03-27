@@ -43,6 +43,7 @@ import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 @Testcontainers
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class SendAndReceiveSqsEventTest {
 
     static {
