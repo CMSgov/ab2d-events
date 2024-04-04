@@ -1,18 +1,14 @@
 package gov.cms.ab2d.eventlogger.utils;
 
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.utility.DockerImageName;
 
-@Slf4j
 public class AB2DLocalstackContainer extends LocalStackContainer {
 
+    private static final Logger log = LoggerFactory.getLogger(AB2DLocalstackContainer.class);
     private static final DockerImageName IMAGE_VERSION = DockerImageName.parse("localstack/localstack:latest");
-
-    // If @Slf4j does not work as expected, you can manually create a logger instance like this:
-    // private static final Logger log = LoggerFactory.getLogger(AB2DLocalstackContainer.class);
 
     public AB2DLocalstackContainer() {
         super(IMAGE_VERSION);
@@ -27,12 +23,11 @@ public class AB2DLocalstackContainer extends LocalStackContainer {
         super.start();
         System.setProperty("AWS_SQS_URL", "localhost:" + this.getMappedPort(EnabledService.named("SQS").getPort()));
 
-        // Insert a delay after starting the container
         try {
-            // Wait for a specified time (e.g., 60000 milliseconds equals 1 minute)
-            log.info("Waiting for manual verification..."); // Log message indicating wait start
-            Thread.sleep(90000); // Adjust the time as necessary
-            log.info("Wait completed. Resuming execution..."); // Log message indicating wait end
+            log.info("Container started. Waiting for manual verification...");
+            // Sleep for a specified time. For example, 60000 milliseconds equals 1 minute.
+            Thread.sleep(60000);
+            log.info("Wait completed. Resuming execution...");
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             log.error("Interrupted during wait", e);
