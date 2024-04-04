@@ -4,7 +4,7 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
     id 'java'
-    id 'org.springframework.boot' version "2.7.6"
+    id 'org.springframework.boot' version "3.1.0"
     id 'com.jfrog.artifactory' version '4.32.0' apply false
     id "org.sonarqube" version "4.1.0.3113"
     id "gov.cms.ab2d.plugin" version "1.0.2"
@@ -49,7 +49,7 @@ allprojects {
         testImplementation "commons-io:commons-io:2.12.0"
         testImplementation 'org.springframework.data:spring-data-jpa:2.7.6'
         testImplementation "org.liquibase:liquibase-core:${liquibaseVersion}"
-        testImplementation "org.testcontainers:localstack:1.18.2"
+        testImplementation "org.testcontainers:localstack:1.19.7"
         compileOnly "org.cyclonedx:cyclonedx-gradle-plugin:1.4.0"
         compileOnly 'org.cyclonedx:cyclonedx-core-java:7.3.2'
     }

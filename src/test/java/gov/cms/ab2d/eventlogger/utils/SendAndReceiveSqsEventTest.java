@@ -44,13 +44,13 @@ import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 @Testcontainers
-@EnableAutoConfiguration(
-    exclude = {
-        io.awspring.cloud.autoconfigure.context.ContextInstanceDataAutoConfiguration.class,
-        io.awspring.cloud.autoconfigure.context.ContextStackAutoConfiguration.class,
-        io.awspring.cloud.autoconfigure.context.ContextRegionProviderAutoConfiguration.class,
-    }
-)
+//@EnableAutoConfiguration(
+//    exclude = {
+//        io.awspring.cloud.autoconfigure.context.ContextInstanceDataAutoConfiguration.class,
+//        io.awspring.cloud.autoconfigure.context.ContextStackAutoConfiguration.class,
+//        io.awspring.cloud.autoconfigure.context.ContextRegionProviderAutoConfiguration.class,
+//    }
+//)
 public class SendAndReceiveSqsEventTest {
 
     static {
