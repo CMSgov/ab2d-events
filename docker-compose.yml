@@ -38,6 +38,7 @@ services:
         - EDGE_PORT=4566
         - SERVICES=sqs
         - SQS_ENDPOINT_STRATEGY=dynamic
+        - HOSTNAME_EXTERNAL=localstack
     ports:
         - '4566:4566'
 # This needs a shared volume so that both the API and worker module can access the ndjson files being generated
