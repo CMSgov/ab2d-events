@@ -35,12 +35,12 @@ services:
       - "local"
     environment:
         - AWS_DEFAULT_REGION=us-east-1
-        - EDGE_PORT=4566
+        - EDGE_PORT=4558
         - SERVICES=sqs
         - SQS_ENDPOINT_STRATEGY=dynamic
         - HOSTNAME_EXTERNAL=localstack
     ports:
-        - '4566:4566'
+        - '4558:4558'
 # This needs a shared volume so that both the API and worker module can access the ndjson files being generated
 volumes:
   tmp-volume:
