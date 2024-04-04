@@ -26,7 +26,9 @@ public class AB2DLocalstackContainer extends LocalStackContainer {
         try {
             log.info("Container started. Waiting for manual verification...");
             // Sleep for a specified time. For example, 60000 milliseconds equals 1 minute.
-            System.out.println("AWS_SQS_URL: " + awsSqsUrl);
+            String awsSqsUrl = System.getProperty("AWS_SQS_URL");
+            System.out.println("AWS_SQS_URL: " + awsSqsUrl); // This prints the value to the console
+            log.info("AWS_SQS_URL: {}", awsSqsUrl); // This logs the value
             Thread.sleep(60000);
             log.info("Wait completed. Resuming execution...");
         } catch (InterruptedException e) {
