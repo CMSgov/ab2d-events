@@ -37,6 +37,7 @@ services:
         - AWS_DEFAULT_REGION=us-east-1
         - EDGE_PORT=4566
         - SERVICES=sqs
+        - SQS_ENDPOINT_STRATEGY=dynamic
     ports:
         - '4566:4566'
 # This needs a shared volume so that both the API and worker module can access the ndjson files being generated
