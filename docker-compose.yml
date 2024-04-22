@@ -29,18 +29,18 @@ services:
       - "${HOME}/.m2:/root/.m2"
 # Uncomment this when running locally to start up localstack
 # When we update docker-compose to a version that supports profiles commenting this out will no longer be needed
-  localstack:
-    image: localstack/localstack:latest
-    profiles:
-      - "local"
-    environment:
-        - AWS_DEFAULT_REGION=us-east-1
-        - EDGE_PORT=4558
-        - SERVICES=sqs
-        - SQS_ENDPOINT_STRATEGY=dynamic
-        - HOSTNAME_EXTERNAL=localstack
-    ports:
-        - '4558:4558'
+#  localstack:
+#    image: localstack/localstack:latest
+#    profiles:
+#      - "local"
+#    environment:
+#        - AWS_DEFAULT_REGION=us-east-1
+#        - EDGE_PORT=4558
+#        - SERVICES=sqs
+#        - SQS_ENDPOINT_STRATEGY=dynamic
+#        - HOSTNAME_EXTERNAL=localstack
+#    ports:
+#        - '4558:4558'
 # This needs a shared volume so that both the API and worker module can access the ndjson files being generated
 volumes:
   tmp-volume:
