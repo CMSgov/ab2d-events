@@ -76,6 +76,11 @@ public class SendAndReceiveSqsEventTest {
 
     @Test
     void testSendAndReceiveMessages() throws JsonProcessingException {
+
+        System.out.println("INSIDE TEST: AWS_URL = ");
+        String property = System.getProperty("AWS_URL");
+        System.out.println("AWS_URL PROPERTY = " + property);
+
         final ArgumentCaptor<LoggableEvent> captor = ArgumentCaptor.forClass(LoggableEvent.class);
         ApiRequestEvent sentApiRequestEvent = new ApiRequestEvent("organization", "jobId", "url", "ipAddress", "token", "requestId");
         ApiResponseEvent sentApiResponseEvent = new ApiResponseEvent("organization", "jobId", HttpStatus.I_AM_A_TEAPOT, "ipAddress", "token", "requestId");
