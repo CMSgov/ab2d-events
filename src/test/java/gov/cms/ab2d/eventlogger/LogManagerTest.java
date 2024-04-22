@@ -54,10 +54,17 @@ class LogManagerTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+
+        String property = System.getProperty("AWS_URL");
+        System.out.println("INSIDE SETUP TEST: AWS_URL = " + property);
+        
     }
 
     @AfterEach
     public void cleanUp() {
+        String property = System.getProperty("AWS_URL");
+        System.out.println("INSIDE CLEANUP TEST: AWS_URL = " + property);
+
         reset(slackLogger);
         loggerEventRepository.delete();
     }
