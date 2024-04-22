@@ -22,6 +22,9 @@ import gov.cms.ab2d.eventlogger.LogManager;
 import gov.cms.ab2d.eventlogger.api.EventsListener;
 import java.util.Collections;
 import java.util.List;
+
+import org.junit.Before;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -67,20 +70,23 @@ public class SendAndReceiveSqsEventTest {
     @Autowired
     private EventsListener eventListener;
 
+    @AfterAll
+    static void printProperty() {
+        String property = System.getProperty("AWS_URL");
+        System.out.println("INSIDE TEST: AWS_URL = " + property);
+
+    }
+
     @Test
     void testQueueUrl() {
         String url = amazonSQS.getQueueUrl(DEV_EVENTS_SQS).getQueueUrl();
+        System.out.println("Queue URL = " + url);
         Assertions.assertTrue(url.contains("localhost:"));
         Assertions.assertTrue(url.contains(DEV_EVENTS_SQS));
     }
 
     @Test
     void testSendAndReceiveMessages() throws JsonProcessingException {
-
-        System.out.println("INSIDE TEST: AWS_URL = ");
-        String property = System.getProperty("AWS_URL");
-        System.out.println("AWS_URL PROPERTY = " + property);
-
         final ArgumentCaptor<LoggableEvent> captor = ArgumentCaptor.forClass(LoggableEvent.class);
         ApiRequestEvent sentApiRequestEvent = new ApiRequestEvent("organization", "jobId", "url", "ipAddress", "token", "requestId");
         ApiResponseEvent sentApiResponseEvent = new ApiResponseEvent("organization", "jobId", HttpStatus.I_AM_A_TEAPOT, "ipAddress", "token", "requestId");
