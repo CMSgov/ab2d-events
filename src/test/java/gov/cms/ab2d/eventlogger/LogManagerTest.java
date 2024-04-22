@@ -25,6 +25,7 @@ import java.util.List;
 
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -149,6 +150,10 @@ class LogManagerTest {
 
     @Test
     void testOnlyKin() {
+
+        String property = System.getProperty("AWS_URL");
+        System.out.println("INSIDE TEST: AWS_URL = " + property);
+
         ErrorEvent event = new ErrorEvent("user", "jobId", ErrorEvent.ErrorType.FILE_ALREADY_DELETED,
                 "File Deleted");
         logManager = new LogManager(sqlEventLogger, kinesisEventLogger, slackLogger);
