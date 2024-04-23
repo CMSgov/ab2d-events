@@ -36,7 +36,6 @@ jobs:
             ARTIFACTORY_PASSWORD=/artifactory/password
             SONAR_HOST_URL=/sonarqube/url
             SONAR_TOKEN=/sonarqube/token
-            AWS_URL=localhost:4566
 
       - name: Run tests
         run: gradle test ${RUNNER_DEBUG:+"--debug"}
