@@ -28,9 +28,16 @@ public class AB2DLocalstackContainer extends LocalStackContainer {
 
         System.setProperty("AWS_URL", "localhost:" + this.getMappedPort(EnabledService.named("SQS").getPort()));
         System.setProperty("HOSTNAME_EXTERNAL", this.getEndpoint().toString());
-        // System.setProperty("AWS_SQS_URL", "localhost:4566");
+        System.setProperty("SQS_ENDPOINT_STRATEGY", "off");
 
-        String property = System.getProperty("AWS_URL");
-        System.out.println("Container ENV Var: AWS_URL = " + property);
+        String aws_url = System.getProperty("AWS_URL");
+        String hostname_external = System.getProperty("HOSTNAME_EXTERNAL");
+        String sqs_endpoint_strategy = System.getProperty("SQS_ENDPOINT_STRATEGY");
+        
+        System.out.println("Container ENV Vars: ");
+        System.out.println("AWS_URL = " + aws_url);
+        System.out.println("HOSTNAME_EXTERNAL = " + hostname_external);
+        System.out.println("SQS_ENDPOINT_STRATEGY = " + sqs_endpoint_strategy);
+
     }
 }
