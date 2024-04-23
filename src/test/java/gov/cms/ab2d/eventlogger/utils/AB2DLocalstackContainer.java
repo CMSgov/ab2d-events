@@ -22,13 +22,14 @@ public class AB2DLocalstackContainer extends LocalStackContainer {
         super.withServices(Service.SQS);
         super.start();
         
-        System.out.println("STARTING AB2DLOCALSTACK CONTAINER. SQS SERVICE PORT = ");
-        System.out.println(String.valueOf(this.getMappedPort(EnabledService.named("SQS").getPort())));
+        System.out.println("STARTING AB2DLOCALSTACK CONTAINER...");
+        System.out.println("CONTAINER ENDPOINT URI = " + this.getEndpoint());
+        System.out.println("SQS SERVICE PORT = " + String.valueOf(this.getMappedPort(EnabledService.named("SQS").getPort())));
 
         System.setProperty("AWS_URL", "localhost:" + this.getMappedPort(EnabledService.named("SQS").getPort()));
         // System.setProperty("AWS_SQS_URL", "localhost:4566");
 
         String property = System.getProperty("AWS_URL");
-        System.out.println("AWS_URL PROPERTY = " + property);
+        System.out.println("Container ENV Var: AWS_URL = " + property);
     }
 }
