@@ -25,6 +25,7 @@ import java.util.List;
 
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -53,10 +54,17 @@ class LogManagerTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+
+        String property = System.getProperty("AWS_URL");
+        System.out.println("INSIDE SETUP TEST: AWS_URL = " + property);
+        
     }
 
     @AfterEach
     public void cleanUp() {
+        String property = System.getProperty("AWS_URL");
+        System.out.println("INSIDE CLEANUP TEST: AWS_URL = " + property);
+
         reset(slackLogger);
         loggerEventRepository.delete();
     }
@@ -149,6 +157,10 @@ class LogManagerTest {
 
     @Test
     void testOnlyKin() {
+
+        String property = System.getProperty("AWS_URL");
+        System.out.println("INSIDE TEST: AWS_URL = " + property);
+
         ErrorEvent event = new ErrorEvent("user", "jobId", ErrorEvent.ErrorType.FILE_ALREADY_DELETED,
                 "File Deleted");
         logManager = new LogManager(sqlEventLogger, kinesisEventLogger, slackLogger);
