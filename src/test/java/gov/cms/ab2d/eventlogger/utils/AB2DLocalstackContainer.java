@@ -21,6 +21,7 @@ public class AB2DLocalstackContainer extends LocalStackContainer {
         System.setProperty("com.amazonaws.sdk.disableCertChecking", "");
         super.withServices(Service.SQS);
         super.start();
-        System.setProperty("AWS_SQS_URL", "localhost:4566");
+        int sqsPort = this.getMappedPort(Service.SQS.getPort()); // Dynamically retrieve the mapped port for SQS
+        System.setProperty("AWS_SQS_URL", "localhost:" + sqsPort);
     }
 }
