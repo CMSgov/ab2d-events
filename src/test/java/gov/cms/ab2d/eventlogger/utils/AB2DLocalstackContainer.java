@@ -12,6 +12,7 @@ public class AB2DLocalstackContainer extends LocalStackContainer {
 
     public AB2DLocalstackContainer() {
         super(IMAGE_VERSION);
+        super.withEnv("SQS_ENDPOINT_STRATEGY", "dynamic");        
     }
 
     @Override
