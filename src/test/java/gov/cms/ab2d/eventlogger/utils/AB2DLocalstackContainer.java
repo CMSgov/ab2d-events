@@ -1,9 +1,8 @@
-package gov.cms.ab2d.eventlogger.utils;
+package gov.cms.ab2d.eventclient.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.testcontainers.containers.localstack.LocalStackContainer;
 import org.testcontainers.utility.DockerImageName;
-
 
 @Slf4j
 public class AB2DLocalstackContainer extends LocalStackContainer {
@@ -21,7 +20,7 @@ public class AB2DLocalstackContainer extends LocalStackContainer {
         System.setProperty("com.amazonaws.sdk.disableCertChecking", "");
         super.withServices(Service.SQS);
         super.start();
-        int sqsPort = this.getMappedPort(Service.SQS.getPort()); // Dynamically retrieve the mapped port for SQS
-        System.setProperty("AWS_SQS_URL", "localhost:" + sqsPort);
+        System.setProperty("AWS_URL",
+                "localhost:" + this.getMappedPort(EnabledService.named("SQS").getPort()));
     }
 }
