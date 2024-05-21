@@ -70,6 +70,7 @@ public class SendAndReceiveSqsEventTest {
     @Test
     void testQueueUrl() {
         String url = amazonSQS.getQueueUrl(DEV_EVENTS_SQS).getQueueUrl();
+        Assertions.assertTrue(url.contains("localhost:"));
         Assertions.assertTrue(url.contains(DEV_EVENTS_SQS));
     }
 
