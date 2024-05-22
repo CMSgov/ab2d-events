@@ -37,6 +37,9 @@ jobs:
             SONAR_HOST_URL=/sonarqube/url
             SONAR_TOKEN=/sonarqube/token
 
+      - name: Clean project
+        run: gradle clean
+
       - name: Run tests
         run: gradle test ${RUNNER_DEBUG:+"--debug"}
 
