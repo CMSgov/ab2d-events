@@ -1,4 +1,4 @@
-FROM openjdk:17
+FROM amazoncorretto:17-al2-jdk
 WORKDIR /usr/src/ab2d-events
 ADD build/libs/*.jar /usr/src/ab2d-events/ab2d-event.jar
 
