@@ -9,7 +9,8 @@ on:
 jobs:
   release:
     runs-on: self-hosted
-
+    env:
+      ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
