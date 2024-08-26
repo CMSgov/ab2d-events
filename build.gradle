@@ -18,6 +18,7 @@ group = "gov.cms.ab2d"
 ext {
     springBootVersion= '2.7.6'
     springCloudAwsVersion = '2.4.4'
+    springWebVersion= '5.3.26'
     liquibaseVersion="4.22.0"
     jacksonVersion="2.15.2"
 }
@@ -29,8 +30,8 @@ allprojects {
         implementation "com.squareup.okhttp3:okhttp:4.11.0"
         implementation "org.springframework.boot:spring-boot-starter:${springBootVersion}"
         implementation "org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}"
-        implementation 'org.springframework:spring-web:6.1.12'
-        implementation 'org.springframework:spring-webmvc:6.1.12'
+        implementation "org.springframework:spring-web:${springBootVersion}"
+        implementation "org.springframework:spring-webmvc:${springBootVersion}"
         implementation "org.springframework.boot:spring-boot-starter-jdbc:${springBootVersion}"
         implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
         implementation "io.awspring.cloud:spring-cloud-aws-autoconfigure:${springCloudAwsVersion}"
