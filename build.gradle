@@ -18,6 +18,7 @@ group = "gov.cms.ab2d"
 ext {
     springBootVersion= '2.7.6'
     springCloudAwsVersion = '2.4.4'
+    springWebVersion= '5.3.26'
     liquibaseVersion="4.22.0"
     jacksonVersion="2.15.2"
 }
@@ -29,9 +30,10 @@ allprojects {
         implementation "com.squareup.okhttp3:okhttp:4.11.0"
         implementation "org.springframework.boot:spring-boot-starter:${springBootVersion}"
         implementation "org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}"
-        implementation 'org.springframework:spring-web:5.3.24'
         implementation "org.springframework.boot:spring-boot-starter-jdbc:${springBootVersion}"
         implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
+        implementation "org.springframework:spring-web:${springWebVersion}"
+        implementation "org.springframework:spring-webmvc:${springWebVersion}"
         implementation "io.awspring.cloud:spring-cloud-aws-autoconfigure:${springCloudAwsVersion}"
         implementation "io.awspring.cloud:spring-cloud-aws-messaging:${springCloudAwsVersion}"
         implementation "commons-codec:commons-codec:1.15"
@@ -41,10 +43,10 @@ allprojects {
         implementation "com.fasterxml.jackson.module:jackson-module-parameter-names:${jacksonVersion}"
         implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${jacksonVersion}"
         implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
-        implementation "gov.cms.ab2d:ab2d-events-client:1.12.7"
+        implementation "gov.cms.ab2d:ab2d-events-client:1.12.10"
         implementation 'com.slack.api:slack-api-client:1.29.2'
         runtimeOnly "javax.xml.bind:jaxb-api:2.4.0-b180830.0359"
-        runtimeOnly 'org.postgresql:postgresql:42.6.0'
+        runtimeOnly 'org.postgresql:postgresql:42.7.3'
         testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
         testImplementation "commons-io:commons-io:2.12.0"
         testImplementation 'org.springframework.data:spring-data-jpa:2.7.6'
