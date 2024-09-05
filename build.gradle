@@ -7,6 +7,7 @@ plugins {
     id "gov.cms.ab2d.plugin" version "1.0.2"
     id 'maven-publish'
     id 'org.cyclonedx.bom' version '1.7.4' apply true
+    id "org.springframework.boot" version "3.2.8"
 }
 
 version="2.0.0"
@@ -24,6 +25,7 @@ ext {
 allprojects {
     apply plugin: 'gov.cms.ab2d.plugin'
     apply plugin: "org.cyclonedx.bom"
+    apply plugin: 'org.springframework.boot'
     dependencies {
         implementation "com.squareup.okhttp3:okhttp:4.11.0"
         implementation "org.springframework.boot:spring-boot-starter:${springBootVersion}"
