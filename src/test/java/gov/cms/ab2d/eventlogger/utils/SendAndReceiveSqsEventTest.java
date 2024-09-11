@@ -29,9 +29,10 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
+import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import software.amazon.awssdk.services.sqs.SqsClient;
+import software.amazon.awssdk.services.sqs.SqsAsyncClient;
 import software.amazon.awssdk.services.sqs.model.GetQueueUrlRequest;
 
 
@@ -53,8 +54,9 @@ public class SendAndReceiveSqsEventTest {
         System.setProperty("feature.sqs.enabled", "true");
     }
 
-    public static final String DEV_EVENTS_SQS = "ab2d-dev-events-sqs";
-
+    public static final String DEV_EVENTS_SQS = "local-events-sqs";
+    @Container
+    private static final PostgreSQLContainer POSTGRE_SQL_CONTAINER = new AB2DPostgresqlContainer();
     @Container
     private static final AB2DLocalstackContainer LOCALSTACK_CONTAINER = new AB2DLocalstackContainer();
 
@@ -62,7 +64,7 @@ public class SendAndReceiveSqsEventTest {
     private SQSEventClient sendSQSEvent;
 
     @Autowired
-    private SqsClient amazonSQS;
+    private SqsAsyncClient amazonSQS;
 
     @MockBean
     private LogManager logManager;
@@ -106,7 +108,7 @@ public class SendAndReceiveSqsEventTest {
     }
 
     @Test
-    void testEventListener() throws JsonProcessingException {
+    void testEventListener() {
         ErrorEvent event = new ErrorEvent("user", "jobId", ErrorEvent.ErrorType.FILE_ALREADY_DELETED,
                 "File Deleted");
 
