@@ -14,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
+import static io.awspring.cloud.sqs.annotation.SqsListenerAcknowledgementMode.ON_SUCCESS;
+
 @Slf4j
 @Service
 @DependsOn({"SQSConfig"})
@@ -24,7 +26,7 @@ public class EventsListener {
         this.logManager = logManager;
     }
 
-    @SqsListener(value = "${sqs.queue-name}")
+    @SqsListener(value = "${sqs.queue-name}", acknowledgementMode = ON_SUCCESS)
     public void processEvents(SQSMessages sqsMessage) {
         log.info("EventsListener: Processing events from SQS: " + sqsMessage.getClass().getSimpleName());
         switch (sqsMessage.getClass().getSimpleName()) {
