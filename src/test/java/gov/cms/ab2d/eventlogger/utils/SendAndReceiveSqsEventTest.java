@@ -21,6 +21,8 @@ import gov.cms.ab2d.eventlogger.LogManager;
 import gov.cms.ab2d.eventlogger.api.EventsListener;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -73,8 +75,8 @@ public class SendAndReceiveSqsEventTest {
     private EventsListener eventListener;
 
     @Test
-    void testQueueUrl() {
-        String url = amazonSQS.getQueueUrl(GetQueueUrlRequest.builder().queueName(DEV_EVENTS_SQS).build()).queueUrl();
+    void testQueueUrl() throws ExecutionException, InterruptedException {
+        String url = amazonSQS.getQueueUrl(GetQueueUrlRequest.builder().queueName(DEV_EVENTS_SQS).build()).get().queueUrl();
         Assertions.assertTrue(url.contains(DEV_EVENTS_SQS));
     }
 
