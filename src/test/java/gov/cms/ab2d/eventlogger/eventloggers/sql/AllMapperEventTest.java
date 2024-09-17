@@ -112,7 +112,7 @@ public class AllMapperEventTest {
 
         sqlEventLogger.log(jsce);
 
-        assertEquals("local", jsce.getEnvironment());
+        assertEquals("ab2d-dev", jsce.getEnvironment());
 
         OffsetDateTime val = jsce.getTimeOfEvent();
         List<LoggableEvent> events = loggerEventRepository.load(ApiRequestEvent.class);
@@ -155,13 +155,13 @@ public class AllMapperEventTest {
         ApiResponseEvent jsce = new ApiResponseEvent("laila", "job123", HttpStatus.NOT_FOUND,
                 "Not Found", "Description", "123");
         sqlEventLogger.log(jsce);
-        assertEquals("local", jsce.getEnvironment());
+        assertEquals("ab2d-dev", jsce.getEnvironment());
         List<LoggableEvent> events = loggerEventRepository.load(ApiResponseEvent.class);
         assertEquals(1, events.size());
         List<LoggableEvent> events2 = loggerEventRepository.load();
         assertEquals(events.size(), events2.size());
         ApiResponseEvent event = (ApiResponseEvent) events.get(0);
-        assertEquals("local", event.getEnvironment());
+        assertEquals("ab2d-dev", event.getEnvironment());
         assertTrue(event.getId() > 0);
         assertEquals(event.getId(), jsce.getId());
         assertEquals("laila", event.getOrganization());
