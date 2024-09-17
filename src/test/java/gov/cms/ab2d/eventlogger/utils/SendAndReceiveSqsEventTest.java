@@ -56,7 +56,6 @@ public class SendAndReceiveSqsEventTest {
         System.setProperty("feature.sqs.enabled", "true");
     }
 
-    public static final String DEV_EVENTS_SQS = "local-events-sqs";
     @Container
     private static final PostgreSQLContainer POSTGRE_SQL_CONTAINER = new AB2DPostgresqlContainer();
     @Container
@@ -76,8 +75,9 @@ public class SendAndReceiveSqsEventTest {
 
     @Test
     void testQueueUrl() {
-        String url = amazonSQS.getQueueUrl(GetQueueUrlRequest.builder().queueName(DEV_EVENTS_SQS).build()).join().queueUrl();
-        Assertions.assertTrue(url.contains(DEV_EVENTS_SQS));
+         String sqs = "local-events-sqs";
+        String url = amazonSQS.getQueueUrl(GetQueueUrlRequest.builder().queueName(sqs).build()).join().queueUrl();
+        Assertions.assertTrue(url.contains(sqs));
     }
 
     @Test
