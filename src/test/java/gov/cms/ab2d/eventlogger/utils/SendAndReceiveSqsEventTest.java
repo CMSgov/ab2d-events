@@ -75,8 +75,8 @@ public class SendAndReceiveSqsEventTest {
     private EventsListener eventListener;
 
     @Test
-    void testQueueUrl() throws ExecutionException, InterruptedException {
-        String url = amazonSQS.getQueueUrl(GetQueueUrlRequest.builder().queueName(DEV_EVENTS_SQS).build()).get().queueUrl();
+    void testQueueUrl() {
+        String url = amazonSQS.getQueueUrl(GetQueueUrlRequest.builder().queueName(DEV_EVENTS_SQS).build()).join().queueUrl();
         Assertions.assertTrue(url.contains(DEV_EVENTS_SQS));
     }
 
