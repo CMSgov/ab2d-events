@@ -127,7 +127,7 @@ public class AllMapperEventTest {
         jsce.setId(event.getId());
         assertEquals(event, jsce);
 
-        assertEquals("local", event.getEnvironment());
+        assertEquals("ab2d-dev", event.getEnvironment());
         assertTrue(event.getId() > 0);
         assertEquals(event.getId(), jsce.getId());
         assertEquals("laila", event.getOrganization());
