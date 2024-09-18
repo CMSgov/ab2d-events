@@ -109,7 +109,6 @@ public class AllMapperEventTest {
                 "127.0.0.1", "token", "123");
         jsce.setAwsId("ABC");
 
-
         sqlEventLogger.log(jsce);
 
         assertEquals("ab2d-dev", jsce.getEnvironment());
@@ -156,6 +155,8 @@ public class AllMapperEventTest {
                 "Not Found", "Description", "123");
         sqlEventLogger.log(jsce);
         assertEquals("ab2d-dev", jsce.getEnvironment());
+        long id = jsce.getId();
+        OffsetDateTime val = jsce.getTimeOfEvent();
         List<LoggableEvent> events = loggerEventRepository.load(ApiResponseEvent.class);
         assertEquals(1, events.size());
         List<LoggableEvent> events2 = loggerEventRepository.load();
@@ -188,6 +189,7 @@ public class AllMapperEventTest {
                 "laila", "jobIdVal", "Contract123", 100, 90, 80, 2, 70, 1000, 2000, 1);
         sqlEventLogger.log(cbse);
         assertEquals("ab2d-dev", cbse.getEnvironment());
+        long id = cbse.getId();
         OffsetDateTime val = cbse.getTimeOfEvent();
         List<LoggableEvent> events = loggerEventRepository.load(ContractSearchEvent.class);
         assertEquals(1, events.size());
@@ -253,6 +255,7 @@ public class AllMapperEventTest {
                 "Description");
         sqlEventLogger.log(jsce);
         assertEquals("ab2d-dev", jsce.getEnvironment());
+        long id = jsce.getId();
         OffsetDateTime val = jsce.getTimeOfEvent();
         List<LoggableEvent> events = loggerEventRepository.load(ErrorEvent.class);
         assertEquals(1, events.size());
@@ -289,6 +292,7 @@ public class AllMapperEventTest {
         String hash = jsce.getFileHash();
         sqlEventLogger.log(jsce);
         assertEquals("ab2d-dev", jsce.getEnvironment());
+        long id = jsce.getId();
         OffsetDateTime val = jsce.getTimeOfEvent();
         List<LoggableEvent> events = loggerEventRepository.load(FileEvent.class);
         assertEquals(1, events.size());
@@ -304,7 +308,7 @@ public class AllMapperEventTest {
         assertTrue(Math.abs(val.getNano() - event.getTimeOfEvent().getNano()) < ONE_MILL_SEC_IN_NANO);
         assertEquals(hash, event.getFileHash());
         assertFalse(hash.isEmpty());
-        assertEquals(tmpDir + "/testFile", event.getFileName());
+        assertEquals(tmpDir.toString() + "/testFile", event.getFileName());
         assertEquals(11, event.getFileSize());
         assertEquals(FileEvent.FileStatus.CLOSE, event.getStatus());
         f.delete();
@@ -325,6 +329,7 @@ public class AllMapperEventTest {
                 "FAILED", "Description");
         sqlEventLogger.log(jsce);
         assertEquals("ab2d-dev", jsce.getEnvironment());
+        long id = jsce.getId();
         OffsetDateTime val = jsce.getTimeOfEvent();
         List<LoggableEvent> events = loggerEventRepository.load(JobStatusChangeEvent.class);
         assertEquals(1, events.size());
@@ -358,6 +363,7 @@ public class AllMapperEventTest {
                 "filename", 10);
         sqlEventLogger.log(cbse);
         assertEquals("ab2d-dev", cbse.getEnvironment());
+        long id = cbse.getId();
         OffsetDateTime val = cbse.getTimeOfEvent();
         List<LoggableEvent> events = loggerEventRepository.load(ReloadEvent.class);
         List<LoggableEvent> events2 = loggerEventRepository.load();
