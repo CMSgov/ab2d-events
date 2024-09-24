@@ -24,15 +24,12 @@ ext {
 allprojects {
     apply plugin: 'gov.cms.ab2d.plugin'
     apply plugin: "org.cyclonedx.bom"
-  //  apply plugin: 'org.springframework.boot'
     dependencies {
         implementation "com.squareup.okhttp3:okhttp:4.11.0"
         implementation "org.springframework.boot:spring-boot-starter:${springBootVersion}"
         implementation "org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}"
         implementation "org.springframework.boot:spring-boot-starter-jdbc:${springBootVersion}"
         implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
-        implementation "org.springframework:spring-web:${springWebVersion}"
-        implementation "org.springframework:spring-webmvc:${springWebVersion}"
         implementation "io.awspring.cloud:spring-cloud-aws:${springCloudAwsVersion}"
         implementation "io.awspring.cloud:spring-cloud-aws-dependencies:${springCloudAwsVersion}"
         implementation "io.awspring.cloud:spring-cloud-aws-starter-sqs:${springCloudAwsVersion}"
