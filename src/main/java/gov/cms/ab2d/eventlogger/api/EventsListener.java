@@ -9,11 +9,12 @@ import gov.cms.ab2d.eventclient.messages.SlackSQSMessage;
 import gov.cms.ab2d.eventclient.messages.TraceAndAlertSQSMessage;
 import gov.cms.ab2d.eventclient.messages.TraceSQSMessage;
 import gov.cms.ab2d.eventlogger.LogManager;
+import io.awspring.cloud.sqs.annotation.SqsListener;
 import lombok.extern.slf4j.Slf4j;
-import io.awspring.cloud.messaging.listener.SqsMessageDeletionPolicy;
-import io.awspring.cloud.messaging.listener.annotation.SqsListener;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
+
+import static io.awspring.cloud.sqs.annotation.SqsListenerAcknowledgementMode.ON_SUCCESS;
 
 @Slf4j
 @Service
@@ -25,7 +26,7 @@ public class EventsListener {
         this.logManager = logManager;
     }
 
-    @SqsListener(value = "${sqs.queue-name}", deletionPolicy = SqsMessageDeletionPolicy.ON_SUCCESS)
+    @SqsListener(value = "${sqs.queue-name}", acknowledgementMode = ON_SUCCESS)
     public void processEvents(SQSMessages sqsMessage) {
         log.info("EventsListener: Processing events from SQS: " + sqsMessage.getClass().getSimpleName());
         switch (sqsMessage.getClass().getSimpleName()) {
