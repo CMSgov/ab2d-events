@@ -1,28 +1,24 @@
-name: Test
+name: Unit tests and static analysis
 
 on:
-  push:
-    branches-ignore:
-      - 'main'
-  workflow_dispatch:
+  workflow_call:
+  workflow_dispatch: # Allow manual trigger
 
 jobs:
   test:
     runs-on: self-hosted
-    env:
-      ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b # v4.5.0
         with:
-          java-version: '17'
           distribution: 'adopt'
+          java-version: '17'
 
       - name: Set Gradle
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@ac2d340dc04d9e1113182899e983b5400c17cda1 # v3.5.0
         with:
           gradle-version: 7.5
 
