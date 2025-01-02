@@ -71,7 +71,7 @@ jobs:
           docker build -t $TAG .
 
           # Push to special tag for promotion if this is run on a push to main
-          if [ "$GITHUB_REF" == "refs/heads/main" ]; then
+          if [ "$GITHUB_REF" == "refs/heads/plt-190-reworkflows" ]; then
             SHA_SHORT=$(git rev-parse --short HEAD)
             echo "Tagging image for commit sha $SHA_SHORT"
             docker tag "$TAG" "$ECR_URI:event-service-main-$SHA_SHORT"
