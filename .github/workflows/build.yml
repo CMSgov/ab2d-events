@@ -57,13 +57,24 @@ jobs:
         run: |
           ECR_DOMAIN="$ACCOUNT.dkr.ecr.$AWS_REGION.amazonaws.com"
 
+          aws ecr get-login-password | docker login --username AWS --password-stdin $ECR_DOMAIN
+
           ECR_REPO="ab2d-$ENV-services"
           if [ "$ENV" == "test" ]; then
             ECR_REPO="ab2d-impl-services"
           fi
 
-          TAG="$ECR_DOMAIN/$ECR_REPO:event-service"
+          ECR_URI="$ECR_DOMAIN/$ECR_REPO"
 
-          aws ecr get-login-password | docker login --username AWS --password-stdin $ECR_DOMAIN
+          TAG="$ECR_URI:event-service"
+
           docker build -t $TAG .
-          docker push $TAG
+
+          # Push to special tag for promotion if this is run on a push to main
+          if [ "$GITHUB_REF" == "refs/heads/main" ]; then
+            SHA_SHORT=$(git rev-parse --short HEAD)
+            echo "Tagging image for commit sha $SHA_SHORT"
+            docker tag "$TAG" "$ECR_URI:event-service-main-$SHA_SHORT"
+          fi
+
+          docker push "$ECR_URI" --all-tags
