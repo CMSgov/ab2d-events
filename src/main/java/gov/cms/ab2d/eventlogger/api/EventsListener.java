@@ -12,6 +12,7 @@ import gov.cms.ab2d.eventlogger.LogManager;
 import io.awspring.cloud.sqs.annotation.SqsListener;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import static io.awspring.cloud.sqs.annotation.SqsListenerAcknowledgementMode.ON_SUCCESS;
@@ -26,7 +27,8 @@ public class EventsListener {
         this.logManager = logManager;
     }
 
-    @SqsListener(value = "${sqs.queue-name}", acknowledgementMode = ON_SUCCESS)
+    @SqsListener(value = "${sqs.queue-name}")//, acknowledgementMode = ON_SUCCESS)
+    @Async
     public void processEvents(SQSMessages sqsMessage) {
         log.info("EventsListener: Processing events from SQS: " + sqsMessage.getClass().getSimpleName());
         switch (sqsMessage.getClass().getSimpleName()) {
