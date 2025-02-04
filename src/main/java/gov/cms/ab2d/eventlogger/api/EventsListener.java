@@ -32,8 +32,7 @@ public class EventsListener {
     public void processEvents(SQSMessages sqsMessage) {
         try {
             log.info("EventsListener: Processing events from SQS: " + sqsMessage.getClass().getSimpleName());
-           // switch (sqsMessage.getClass().getSimpleName()) {
-            switch (sqsMessage.getClass().getName()) {
+            switch (sqsMessage.getClass().getSimpleName()) {
                 case "GeneralSQSMessage" -> logManager.log(((GeneralSQSMessage) sqsMessage).getLoggableEvent());
                 case "AlertSQSMessage" ->
                         logManager.alert(((AlertSQSMessage) sqsMessage).getMessage(), ((AlertSQSMessage) sqsMessage).getEnvironments());
