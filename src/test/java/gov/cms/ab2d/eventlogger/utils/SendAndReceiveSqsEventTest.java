@@ -1,6 +1,5 @@
 package gov.cms.ab2d.eventlogger.utils;
 
-import com.amazonaws.services.sqs.AmazonSQS;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import gov.cms.ab2d.eventclient.clients.SQSEventClient;
 import gov.cms.ab2d.eventclient.config.Ab2dEnvironment;
@@ -22,6 +21,8 @@ import gov.cms.ab2d.eventlogger.LogManager;
 import gov.cms.ab2d.eventlogger.api.EventsListener;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -30,8 +31,11 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
+import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import software.amazon.awssdk.services.sqs.SqsAsyncClient;
+import software.amazon.awssdk.services.sqs.model.GetQueueUrlRequest;
 
 
 import static org.mockito.ArgumentMatchers.any;
@@ -44,13 +48,7 @@ import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 @Testcontainers
-@EnableAutoConfiguration(
-    exclude = {
-        io.awspring.cloud.autoconfigure.context.ContextInstanceDataAutoConfiguration.class,
-        io.awspring.cloud.autoconfigure.context.ContextStackAutoConfiguration.class,
-        io.awspring.cloud.autoconfigure.context.ContextRegionProviderAutoConfiguration.class,
-    }
-)
+@EnableAutoConfiguration()
 public class SendAndReceiveSqsEventTest {
 
     static {
@@ -58,8 +56,8 @@ public class SendAndReceiveSqsEventTest {
         System.setProperty("feature.sqs.enabled", "true");
     }
 
-    public static final String DEV_EVENTS_SQS = "ab2d-dev-events-sqs";
-
+    @Container
+    private static final PostgreSQLContainer POSTGRE_SQL_CONTAINER = new AB2DPostgresqlContainer();
     @Container
     private static final AB2DLocalstackContainer LOCALSTACK_CONTAINER = new AB2DLocalstackContainer();
 
@@ -67,7 +65,7 @@ public class SendAndReceiveSqsEventTest {
     private SQSEventClient sendSQSEvent;
 
     @Autowired
-    private AmazonSQS amazonSQS;
+    private SqsAsyncClient amazonSQS;
 
     @MockBean
     private LogManager logManager;
@@ -77,12 +75,13 @@ public class SendAndReceiveSqsEventTest {
 
     @Test
     void testQueueUrl() {
-        String url = amazonSQS.getQueueUrl(DEV_EVENTS_SQS).getQueueUrl();
-        Assertions.assertTrue(url.contains(DEV_EVENTS_SQS));
+         String sqs = "ab2d-dev-events-sqs";
+        String url = amazonSQS.getQueueUrl(GetQueueUrlRequest.builder().queueName(sqs).build()).join().queueUrl();
+        Assertions.assertTrue(url.contains(sqs));
     }
 
     @Test
-    void testSendAndReceiveMessages() throws JsonProcessingException {
+    void testSendAndReceiveMessages() {
         final ArgumentCaptor<LoggableEvent> captor = ArgumentCaptor.forClass(LoggableEvent.class);
         ApiRequestEvent sentApiRequestEvent = new ApiRequestEvent("organization", "jobId", "url", "ipAddress", "token", "requestId");
         ApiResponseEvent sentApiResponseEvent = new ApiResponseEvent("organization", "jobId", HttpStatus.I_AM_A_TEAPOT, "ipAddress", "token", "requestId");
@@ -111,7 +110,7 @@ public class SendAndReceiveSqsEventTest {
     }
 
     @Test
-    void testEventListener() throws JsonProcessingException {
+    void testEventListener() {
         ErrorEvent event = new ErrorEvent("user", "jobId", ErrorEvent.ErrorType.FILE_ALREADY_DELETED,
                 "File Deleted");
 
