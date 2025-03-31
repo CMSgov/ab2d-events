@@ -1,0 +1,69 @@
+name: promote-events
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      environment:
+        required: true
+        type: choice
+        options:
+          - dev
+          - test
+          - sbx
+          - prod
+          - prod_test
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  promote:
+    runs-on: self-hosted
+    steps:
+      - uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4.0.2
+        env:
+          ACCOUNT: ${{ inputs.environment == 'prod_test' && 'prod' || inputs.environment }}
+        with:
+          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: arn:aws:iam::${{ secrets[format('{0}_ACCOUNT', env.ACCOUNT)] }}:role/delegatedadmin/developer/ab2d-${{ env.ACCOUNT }}-github-actions
+
+      - name: Set environment variables
+        env:
+          DEPLOYMENT_ENV: ${{ vars[format('{0}_DEPLOYMENT_ENV', inputs.environment)] }}
+        run: |
+          if [ "${{ inputs.environment }}" == "prod_test" ]; then
+            echo "TAG_PREFIX=ab2d-prod-test" >> $GITHUB_ENV
+          else
+            echo "TAG_PREFIX=ab2d-$DEPLOYMENT_ENV" >> $GITHUB_ENV
+          fi
+
+- name: Retag ab2d_event image in ECR
+  env:
+    ACCOUNT: ${{ inputs.environment == 'prod_test' && 'prod' || inputs.environment }}
+    ACCOUNT_ID: ${{ secrets[format('{0}_ACCOUNT', inputs.environment == 'prod_test' && 'prod' || inputs.environment)] }}
+    AWS_REGION: ${{ vars.AWS_REGION }}
+  run: |
+    ECR_REPO_DOMAIN="$ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com"
+    ECR_REPO="ab2d_event"
+    SHA_SHORT="$(git rev-parse --short HEAD)"
+    TOKEN="$(aws ecr get-authorization-token --output text --query 'authorizationData[].authorizationToken')"
+    CONTENT_TYPE="application/vnd.docker.distribution.manifest.v2+json"
+
+    SOURCE_TAG="event-service-main-$SHA_SHORT"
+    echo "Getting the manifest of the image tagged $SOURCE_TAG"
+    MANIFEST="$(curl -sS -H "Authorization: Basic $TOKEN" -H "Accept: $CONTENT_TYPE" "https://$ECR_REPO_DOMAIN/v2/$ECR_REPO/manifests/$SOURCE_TAG")"
+
+
+    SHA_TAG="$TAG_PREFIX-$SHA_SHORT"
+    echo "Adding the $SHA_TAG tag to main-$SHA_SHORT image"
+    curl -sS -X PUT -H "Authorization: Basic $TOKEN" -H "Content-Type: $CONTENT_TYPE" -d "$MANIFEST" "https://$ECR_REPO_DOMAIN/v2/$ECR_REPO/manifests/$SHA_TAG"
+
+    LATEST_TAG="$TAG_PREFIX-latest"
+    echo "Adding the $LATEST_TAG tag to main-$SHA_SHORT image"
+    curl -sS -X PUT -H "Authorization: Basic $TOKEN" -H "Content-Type: $CONTENT_TYPE" -d "$MANIFEST" "https://$ECR_REPO_DOMAIN/v2/$ECR_REPO/manifests/$LATEST_TAG"
