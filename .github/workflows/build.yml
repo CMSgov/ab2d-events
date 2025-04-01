@@ -59,22 +59,44 @@ jobs:
 
           aws ecr get-login-password | docker login --username AWS --password-stdin $ECR_DOMAIN
 
-          ECR_REPO="ab2d-$ENV-services"
           if [ "$ENV" == "test" ]; then
             ECR_REPO="ab2d-impl-services"
+          else
+            ECR_REPO="ab2d-$ENV-services"
           fi
-
           ECR_URI="$ECR_DOMAIN/$ECR_REPO"
-
           TAG="$ECR_URI:event-service"
 
-          docker build -t $TAG .
+          # If we're building for test or dev, build the image
+          if [ "$ENV" = "test" ] || [ "$ENV" = "dev" ]; then
+            docker build -t $TAG .
+            docker push "$TAG"
 
-          # Push to special tag for promotion if this is run on a push to main
-          if [ "$GITHUB_REF" == "refs/heads/main" ]; then
-            SHA_SHORT=$(git rev-parse --short HEAD)
-            echo "Tagging image for commit sha $SHA_SHORT"
-            docker tag "$TAG" "$ECR_URI:event-service-main-$SHA_SHORT"
+            # Push to special tag for promotion if this is run on main
+            if [ "$GITHUB_REF" == "refs/heads/main" ]; then
+              SHA_SHORT=$(git rev-parse --short HEAD)
+              echo "Tagging image for commit sha $SHA_SHORT"
+              docker tag "$TAG" "$ECR_URI:event-service-main-$SHA_SHORT"
+              docker push "$ECR_URI:event-service-main-$SHA_SHORT"
+            fi
           fi
 
-          docker push "$ECR_URI" --all-tags
+          # If the environment is prod or prod-test, re-tag from test
+          if [ "$ENV" = "prod" ] || [ "$ENV" = "prod-test" ]; then
+            TEST_ACCOUNT=${{ secrets.TEST_ACCOUNT }}
+            TEST_ECR_DOMAIN="$TEST_ACCOUNT.dkr.ecr.$AWS_REGION.amazonaws.com"
+            TEST_ECR_URI="$TEST_ECR_DOMAIN/ab2d-impl-services"
+
+            echo "Logging in to test ECR to pull image"
+            aws ecr get-login-password | docker login --username AWS --password-stdin $TEST_ECR_DOMAIN
+
+            echo "Pulling test image"
+            docker pull "$TEST_ECR_URI:event-service"
+
+            echo "Re-tagging for $ENV"
+            docker tag "$TEST_ECR_URI:event-service" "$ECR_URI:event-service"
+
+            echo "Pushing re-tagged image to $ENV ECR"
+            docker push "$ECR_URI:event-service"
+          fi
+
