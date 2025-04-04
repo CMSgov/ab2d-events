@@ -26,7 +26,7 @@ jobs:
   promote:
     runs-on: self-hosted
     steps:
-      - name: Determine environment for PR vs manual
+      - name: Set env values
         id: set-env
         run: |
           if [ "${{ github.event_name }}" == "pull_request" ]; then
@@ -35,37 +35,63 @@ jobs:
             echo "env_name=${{ inputs.environment }}" >> $GITHUB_OUTPUT
           fi
 
-      - uses: aws-actions/configure-aws-credentials@v4.0.2
-        env:
-          ACCOUNT: ${{ steps.set-env.outputs.env_name == 'prod_test' && 'test' || 'prod_test' }}
-        with:
-          aws-region: ${{ vars.AWS_REGION }}
-          role-to-assume: arn:aws:iam::${{ secrets[format('{0}_ACCOUNT', env.ACCOUNT)] }}:role/delegatedadmin/developer/ab2d-${{ env.ACCOUNT }}-github-actions
-
-      - name: Set source/destination ECR config
+      - name: Define source/dest repos and accounts
+        id: repos
         run: |
           if [ "${{ steps.set-env.outputs.env_name }}" == "prod_test" ]; then
-            echo "SOURCE_REPO=ab2d-impl-services" >> $GITHUB_ENV
-            echo "DEST_REPO=ab2d-prod-test-services" >> $GITHUB_ENV
+            echo "SOURCE_ENV=test" >> $GITHUB_OUTPUT
+            echo "SOURCE_REPO=ab2d-impl-services" >> $GITHUB_OUTPUT
+            echo "DEST_REPO=ab2d-prod-test-services" >> $GITHUB_OUTPUT
           elif [ "${{ steps.set-env.outputs.env_name }}" == "prod" ]; then
-            echo "SOURCE_REPO=ab2d-prod-test-services" >> $GITHUB_ENV
-            echo "DEST_REPO=ab2d-prod-services" >> $GITHUB_ENV
+            echo "SOURCE_ENV=prod_test" >> $GITHUB_OUTPUT
+            echo "SOURCE_REPO=ab2d-prod-test-services" >> $GITHUB_OUTPUT
+            echo "DEST_REPO=ab2d-prod-services" >> $GITHUB_OUTPUT
           fi
           echo "TAG_NAME=event-service" >> $GITHUB_ENV
 
-      - name: Retag image in ECR
+      - name: Authenticate to source account and pull manifest
+        uses: aws-actions/configure-aws-credentials@v4.0.2
+        with:
+          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: arn:aws:iam::${{ secrets[format('{0}_ACCOUNT', steps.repos.outputs.SOURCE_ENV)] }}:role/delegatedadmin/developer/ab2d-${{ steps.repos.outputs.SOURCE_ENV }}-github-actions
+
+      - name: Pull manifest from source repo
+        id: pull
         env:
-          ACCOUNT_ID: ${{ secrets[format('{0}_ACCOUNT', steps.set-env.outputs.env_name == 'prod_test' && 'test' || 'prod_test')] }}
+          SOURCE_REPO: ${{ steps.repos.outputs.SOURCE_REPO }}
           AWS_REGION: ${{ vars.AWS_REGION }}
+          TAG_NAME: event-service
         run: |
+          ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
           ECR_REPO_DOMAIN="$ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com"
-          TOKEN="$(aws ecr get-authorization-token --output text --query 'authorizationData[].authorizationToken')"
+          TOKEN=$(aws ecr get-authorization-token --output text --query 'authorizationData[].authorizationToken')
           CONTENT_TYPE="application/vnd.docker.distribution.manifest.v2+json"
 
-          echo "Fetching manifest for $TAG_NAME from $SOURCE_REPO"
-          MANIFEST="$(curl -sS -H "Authorization: Basic $TOKEN" -H "Accept: $CONTENT_TYPE" \
-            "https://$ECR_REPO_DOMAIN/v2/$SOURCE_REPO/manifests/$TAG_NAME")"
+          echo "Pulling manifest from $SOURCE_REPO:$TAG_NAME"
+          MANIFEST=$(curl -sS -H "Authorization: Basic $TOKEN" -H "Accept: $CONTENT_TYPE" \
+            "https://$ECR_REPO_DOMAIN/v2/$SOURCE_REPO/manifests/$TAG_NAME")
+          echo "manifest<<EOF" >> $GITHUB_OUTPUT
+          echo "$MANIFEST" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
-          echo "Tagging image as $TAG_NAME in $DEST_REPO"
+      - name: Authenticate to destination account
+        uses: aws-actions/configure-aws-credentials@v4.0.2
+        with:
+          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: arn:aws:iam::${{ secrets[format('{0}_ACCOUNT', steps.set-env.outputs.env_name)] }}:role/delegatedadmin/developer/ab2d-${{ steps.set-env.outputs.env_name }}-github-actions
+
+      - name: Push tag to destination repo
+        env:
+          DEST_REPO: ${{ steps.repos.outputs.DEST_REPO }}
+          AWS_REGION: ${{ vars.AWS_REGION }}
+          TAG_NAME: event-service
+        run: |
+          ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+          ECR_REPO_DOMAIN="$ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com"
+          TOKEN=$(aws ecr get-authorization-token --output text --query 'authorizationData[].authorizationToken')
+          CONTENT_TYPE="application/vnd.docker.distribution.manifest.v2+json"
+
+          echo "Tagging manifest into $DEST_REPO:$TAG_NAME"
           curl -sS -X PUT -H "Authorization: Basic $TOKEN" -H "Content-Type: $CONTENT_TYPE" \
-            -d "$MANIFEST" "https://$ECR_REPO_DOMAIN/v2/$DEST_REPO/manifests/$TAG_NAME"
+            -d '${{ steps.pull.outputs.manifest }}' \
+            "https://$ECR_REPO_DOMAIN/v2/$DEST_REPO/manifests/$TAG_NAME"
