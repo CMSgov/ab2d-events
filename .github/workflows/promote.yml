@@ -14,6 +14,9 @@ on:
         options:
           - prod_test
           - prod
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: read
@@ -23,41 +26,46 @@ jobs:
   promote:
     runs-on: self-hosted
     steps:
+      - name: Determine environment for PR vs manual
+        id: set-env
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            echo "env_name=prod_test" >> $GITHUB_OUTPUT
+          else
+            echo "env_name=${{ inputs.environment }}" >> $GITHUB_OUTPUT
+          fi
+
       - uses: aws-actions/configure-aws-credentials@v4.0.2
         env:
-          ACCOUNT: ${{ inputs.environment == 'prod_test' && 'test' || 'prod_test' }}
+          ACCOUNT: ${{ steps.set-env.outputs.env_name == 'prod_test' && 'test' || 'prod_test' }}
         with:
           aws-region: ${{ vars.AWS_REGION }}
           role-to-assume: arn:aws:iam::${{ secrets[format('{0}_ACCOUNT', env.ACCOUNT)] }}:role/delegatedadmin/developer/ab2d-${{ env.ACCOUNT }}-github-actions
 
       - name: Set source/destination ECR config
         run: |
-          if [ "${{ inputs.environment }}" == "prod_test" ]; then
+          if [ "${{ steps.set-env.outputs.env_name }}" == "prod_test" ]; then
             echo "SOURCE_REPO=ab2d-impl-services" >> $GITHUB_ENV
             echo "DEST_REPO=ab2d-prod-test-services" >> $GITHUB_ENV
-          elif [ "${{ inputs.environment }}" == "prod" ]; then
+          elif [ "${{ steps.set-env.outputs.env_name }}" == "prod" ]; then
             echo "SOURCE_REPO=ab2d-prod-test-services" >> $GITHUB_ENV
             echo "DEST_REPO=ab2d-prod-services" >> $GITHUB_ENV
           fi
-
-          echo "DEST_TAG=event-service" >> $GITHUB_ENV
+          echo "TAG_NAME=event-service" >> $GITHUB_ENV
 
       - name: Retag image in ECR
         env:
-          ACCOUNT_ID: ${{ secrets[format('{0}_ACCOUNT', inputs.environment == 'prod_test' && 'test' || 'prod_test')] }}
+          ACCOUNT_ID: ${{ secrets[format('{0}_ACCOUNT', steps.set-env.outputs.env_name == 'prod_test' && 'test' || 'prod_test')] }}
           AWS_REGION: ${{ vars.AWS_REGION }}
         run: |
           ECR_REPO_DOMAIN="$ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com"
-          SHA_SHORT="$(git rev-parse --short HEAD)"
-          SOURCE_TAG="event-service-main-$SHA_SHORT"
-
           TOKEN="$(aws ecr get-authorization-token --output text --query 'authorizationData[].authorizationToken')"
           CONTENT_TYPE="application/vnd.docker.distribution.manifest.v2+json"
 
-          echo "Fetching manifest for $SOURCE_TAG from $SOURCE_REPO"
+          echo "Fetching manifest for $TAG_NAME from $SOURCE_REPO"
           MANIFEST="$(curl -sS -H "Authorization: Basic $TOKEN" -H "Accept: $CONTENT_TYPE" \
-            "https://$ECR_REPO_DOMAIN/v2/$SOURCE_REPO/manifests/$SOURCE_TAG")"
+            "https://$ECR_REPO_DOMAIN/v2/$SOURCE_REPO/manifests/$TAG_NAME")"
 
-          echo "Tagging image as $DEST_TAG in $DEST_REPO"
+          echo "Tagging image as $TAG_NAME in $DEST_REPO"
           curl -sS -X PUT -H "Authorization: Basic $TOKEN" -H "Content-Type: $CONTENT_TYPE" \
-            -d "$MANIFEST" "https://$ECR_REPO_DOMAIN/v2/$DEST_REPO/manifests/$DEST_TAG"
+            -d "$MANIFEST" "https://$ECR_REPO_DOMAIN/v2/$DEST_REPO/manifests/$TAG_NAME"
