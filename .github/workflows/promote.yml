@@ -14,9 +14,6 @@ on:
         options:
           - prod_test
           - prod
-  pull_request:
-    branches:
-      - main
 
 permissions:
   contents: read
@@ -26,16 +23,12 @@ jobs:
   promote:
     runs-on: self-hosted
     steps:
-      - name: Set env values
+      - name: Set environment context
         id: set-env
         run: |
-          if [ "${{ github.event_name }}" == "pull_request" ]; then
-            echo "env_name=prod_test" >> $GITHUB_OUTPUT
-          else
-            echo "env_name=${{ inputs.environment }}" >> $GITHUB_OUTPUT
-          fi
+          echo "env_name=${{ inputs.environment }}" >> $GITHUB_OUTPUT
 
-      - name: Define source/dest repos and accounts
+      - name: Define source/destination ECR info
         id: repos
         run: |
           if [ "${{ steps.set-env.outputs.env_name }}" == "prod_test" ]; then
@@ -49,7 +42,7 @@ jobs:
           fi
           echo "TAG_NAME=event-service" >> $GITHUB_ENV
 
-      - name: Authenticate to source account and pull manifest
+      - name: Assume source account to pull image
         uses: aws-actions/configure-aws-credentials@v4.0.2
         with:
           aws-region: ${{ vars.AWS_REGION }}
@@ -70,17 +63,18 @@ jobs:
           echo "Pulling manifest from $SOURCE_REPO:$TAG_NAME"
           MANIFEST=$(curl -sS -H "Authorization: Basic $TOKEN" -H "Accept: $CONTENT_TYPE" \
             "https://$ECR_REPO_DOMAIN/v2/$SOURCE_REPO/manifests/$TAG_NAME")
-          echo "manifest<<EOF" >> $GITHUB_OUTPUT
-          echo "$MANIFEST" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
 
-      - name: Authenticate to destination account
+          # Escape newlines for JSON storage
+          MANIFEST_ESCAPED=$(echo "$MANIFEST" | jq -c .)
+          echo "manifest=$MANIFEST_ESCAPED" >> $GITHUB_OUTPUT
+
+      - name: Assume destination account to retag image
         uses: aws-actions/configure-aws-credentials@v4.0.2
         with:
           aws-region: ${{ vars.AWS_REGION }}
-          role-to-assume: arn:aws:iam::${{ secrets[format('{0}_ACCOUNT', steps.set-env.outputs.env_name)] }}:role/delegatedadmin/developer/ab2d-${{ steps.set-env.outputs.env_name }}-github-actions
+          role-to-assume: arn:aws:iam::${{ secrets.prod_ACCOUNT }}:role/delegatedadmin/developer/ab2d-prod-github-actions
 
-      - name: Push tag to destination repo
+      - name: Push image tag to destination repo
         env:
           DEST_REPO: ${{ steps.repos.outputs.DEST_REPO }}
           AWS_REGION: ${{ vars.AWS_REGION }}
@@ -90,8 +84,8 @@ jobs:
           ECR_REPO_DOMAIN="$ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com"
           TOKEN=$(aws ecr get-authorization-token --output text --query 'authorizationData[].authorizationToken')
           CONTENT_TYPE="application/vnd.docker.distribution.manifest.v2+json"
+          MANIFEST='${{ steps.pull.outputs.manifest }}'
 
-          echo "Tagging manifest into $DEST_REPO:$TAG_NAME"
+          echo "Tagging image as $TAG_NAME in $DEST_REPO"
           curl -sS -X PUT -H "Authorization: Basic $TOKEN" -H "Content-Type: $CONTENT_TYPE" \
-            -d '${{ steps.pull.outputs.manifest }}' \
-            "https://$ECR_REPO_DOMAIN/v2/$DEST_REPO/manifests/$TAG_NAME"
+            -d "$MANIFEST" "https://$ECR_REPO_DOMAIN/v2/$DEST_REPO/manifests/$TAG_NAME"
