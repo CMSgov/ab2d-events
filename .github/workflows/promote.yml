@@ -14,6 +14,9 @@ on:
         options:
           - prod_test
           - prod
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: read
@@ -26,7 +29,11 @@ jobs:
       - name: Set environment context
         id: set-env
         run: |
-          echo "env_name=${{ inputs.environment }}" >> $GITHUB_OUTPUT
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            echo "env_name=prod_test" >> $GITHUB_OUTPUT
+          else
+            echo "env_name=${{ inputs.environment }}" >> $GITHUB_OUTPUT
+          fi
 
       - name: Define source/destination ECR info
         id: repos
@@ -64,7 +71,6 @@ jobs:
           MANIFEST=$(curl -sS -H "Authorization: Basic $TOKEN" -H "Accept: $CONTENT_TYPE" \
             "https://$ECR_REPO_DOMAIN/v2/$SOURCE_REPO/manifests/$TAG_NAME")
 
-          # Escape newlines for JSON storage
           MANIFEST_ESCAPED=$(echo "$MANIFEST" | jq -c .)
           echo "manifest=$MANIFEST_ESCAPED" >> $GITHUB_OUTPUT
 
