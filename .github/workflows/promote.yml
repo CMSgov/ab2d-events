@@ -14,9 +14,6 @@ on:
         options:
           - prod_test
           - prod
-  pull_request:
-    branches:
-      - main
 
 permissions:
   contents: read
@@ -26,14 +23,10 @@ jobs:
   promote:
     runs-on: self-hosted
     steps:
-      - name: Determine promotion environment
+      - name: Set environment
         id: set-env
         run: |
-          if [ "${{ github.event_name }}" == "pull_request" ]; then
-            echo "env_name=prod_test" >> $GITHUB_OUTPUT
-          else
-            echo "env_name=${{ inputs.environment }}" >> $GITHUB_OUTPUT
-          fi
+          echo "env_name=${{ inputs.environment }}" >> $GITHUB_OUTPUT
 
       - name: Define source/destination config
         id: repos
@@ -65,10 +58,8 @@ jobs:
           ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
           SRC_ECR="$ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com"
           docker login --username AWS --password-stdin $SRC_ECR <<< $(aws ecr get-login-password)
-
           echo "Pulling $SRC_ECR/$SOURCE_REPO:$TAG_NAME"
           docker pull "$SRC_ECR/$SOURCE_REPO:$TAG_NAME"
-
           echo "SRC_ECR=$SRC_ECR" >> $GITHUB_OUTPUT
           echo "IMAGE=$SRC_ECR/$SOURCE_REPO:$TAG_NAME" >> $GITHUB_OUTPUT
 
@@ -88,7 +79,6 @@ jobs:
           ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
           DEST_ECR="$ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com"
           docker login --username AWS --password-stdin $DEST_ECR <<< $(aws ecr get-login-password)
-
           echo "Tagging and pushing image to $DEST_ECR/$DEST_REPO:$TAG_NAME"
           docker tag "$IMAGE" "$DEST_ECR/$DEST_REPO:$TAG_NAME"
           docker push "$DEST_ECR/$DEST_REPO:$TAG_NAME"
