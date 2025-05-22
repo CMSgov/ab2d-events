@@ -2,9 +2,6 @@ name: promote-events-gf
 run-name: promote-gf ${{ inputs.environment }}
 
 on:
-  push:
-    branches:
-      - more-workflows-gf
   workflow_call:
     inputs:
       environment:

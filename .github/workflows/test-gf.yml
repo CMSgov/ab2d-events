@@ -1,9 +1,6 @@
 name: Unit tests and static analysis GF
 
 on:
-  push:
-    branches:
-      - more-workflows-gf
   workflow_call:
   workflow_dispatch: # Allow manual trigger
 
