@@ -9,7 +9,7 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    runs-on: codebuild-ab2d-${{github.run_id}}-${{github.run_attempt}}
+    runs-on: codebuild-ab2d-events-${{github.run_id}}-${{github.run_attempt}}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
