@@ -1,6 +1,9 @@
 name: Deploy
 
 on:
+  push:
+    branches:
+      - more-workflows-gf
   workflow_call:
     inputs:
       environment:
