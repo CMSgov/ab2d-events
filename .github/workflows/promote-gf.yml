@@ -26,7 +26,7 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    runs-on: codebuild-ab2d-${{github.run_id}}-${{github.run_attempt}}
+    runs-on: codebuild-ab2d-events-${{github.run_id}}-${{github.run_attempt}}
     env:
       AB2D_ENV: ${{ inputs.environment }}
       TAG_NAME: event-service
