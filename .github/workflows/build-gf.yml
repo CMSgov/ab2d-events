@@ -3,19 +3,7 @@ run-name: build-gf ${{ inputs.environment }}
 
 on:
   workflow_call:
-    inputs:
-      environment:
-        required: true
-        type: string
   workflow_dispatch:
-    inputs:
-      environment:
-        description: AB2D environment
-        required: true
-        type: choice
-        options:
-          - dev
-          - test
 
 jobs:
   build:
@@ -56,24 +44,20 @@ jobs:
           role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT }}:role/delegatedadmin/developer/ab2d-${{ env.AB2D_ENV }}-github-actions
 
       - name: Build and push docker image
+        env:
+          ECR_REPO: ab2d-events
         run: |
           ECR_DOMAIN="$AWS_ACCOUNT.dkr.ecr.$AWS_REGION.amazonaws.com"
-
+          SHA_SHORT=$(git rev-parse --short HEAD)
           aws ecr get-login-password | docker login --username AWS --password-stdin $ECR_DOMAIN
-
-          ECR_REPO="ab2d-services"
-
           ECR_URI="$ECR_DOMAIN/$ECR_REPO"
-
-          TAG="$ECR_URI:event-service"
-
-          docker build -t $TAG .
-
-          # Push to special tag for promotion if this is run on a push to main
-          if [ "$GITHUB_REF" == "refs/heads/main" ]; then
-            SHA_SHORT=$(git rev-parse --short HEAD)
-            echo "Tagging image for commit sha $SHA_SHORT"
-            docker tag "$TAG" "$ECR_URI:event-service-main-$SHA_SHORT"
+          
+          if [ "$GITHUB_REF_NAME" == "main" ]; then
+            TAG_SHORT="contracts-service-main-$SHA_SHORT"
+          else
+            TAG_SHORT="contracts-service-$GITHUB_REF_NAME"
           fi
 
+          docker build -t "$ECR_URI:$TAG_SHORT" .
           docker push "$ECR_URI" --all-tags
+          echo "Published **$TAG_SHORT** to ECR" >> $GITHUB_STEP_SUMMARY
