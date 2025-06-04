@@ -1,5 +1,5 @@
 name: Build-gf
-run-name: build-gf ${{ inputs.environment }}
+run-name: build-gf
 
 on:
   workflow_call:
@@ -7,13 +7,14 @@ on:
 
 jobs:
   build:
+    runs-on: codebuild-ab2d-events-${{github.run_id}}-${{github.run_attempt}}
+    env:
+      ECR_REPO: ab2d-events
+      TAG_PREFIX: events-service
+      AWS_ACCOUNT: ${{ secrets.GF_NON_PROD_ACCOUNT }}
     permissions:
       contents: read
       id-token: write
-    runs-on: codebuild-ab2d-events-${{github.run_id}}-${{github.run_attempt}}
-    env:
-      AWS_ACCOUNT: ${{ secrets.GF_NON_PROD_ACCOUNT }}
-      AB2D_ENV: ${{ inputs.environment }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
@@ -33,20 +34,17 @@ jobs:
             ARTIFACTORY_USER=/artifactory/user
             ARTIFACTORY_PASSWORD=/artifactory/password
 
-      - name: Build libraries
-        run: |
-          gradle -b build.gradle bootJar -Dset.root.project.build.filename=true
-
       - name: Assume role in target account
         uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4.0.2
         with:
           aws-region: ${{ vars.AWS_REGION }}
           role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT }}:role/delegatedadmin/developer/ab2d-dev-github-actions
 
+      - name: Build libraries
+        run: |
+          gradle -b build.gradle bootJar -Dset.root.project.build.filename=true
+
       - name: Build and push docker image
-        env:
-          ECR_REPO: ab2d-events
-          TAG_PREFIX: event-service
         run: |
           ECR_DOMAIN="$AWS_ACCOUNT.dkr.ecr.$AWS_REGION.amazonaws.com"
           SHA_SHORT=$(git rev-parse --short HEAD)
@@ -58,7 +56,7 @@ jobs:
           else
             TAG_SHORT="$TAG_PREFIX-$GITHUB_REF_NAME"
           fi
-
+          
           docker build -t "$ECR_URI:$TAG_SHORT" .
           docker push "$ECR_URI" --all-tags
-          echo "Published **$TAG_SHORT** to ECR" >> $GITHUB_STEP_SUMMARY
+          echo "Published **$ECR_URI:$TAG_SHORT**" >> $GITHUB_STEP_SUMMARY
