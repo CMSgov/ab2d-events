@@ -2,9 +2,12 @@ name: promote-gf
 run-name: promote-gf ${{ inputs.image_tax_prefix }}
 
 on:
+  push:
+    branches:
+      - more-workflows-gf
   workflow_call:
     inputs:
-      tag_suffix:
+      image_tag_suffix:
         required: true
         type: string
   workflow_dispatch:
@@ -25,7 +28,7 @@ jobs:
       id-token: write
     runs-on: codebuild-ab2d-events-${{github.run_id}}-${{github.run_attempt}}
     env:
-      TAG_NAME: event-service-${{ inputs.image_tag_suffix || github.ref }}
+      TAG_NAME: event-service-${{ inputs.image_tag_suffix || github.ref }} # TODO should this remain as is, or change to `events-service`?
       SOURCE_REPO: ab2d-events
     steps:
       - name: Define destination repo
