@@ -1,21 +1,18 @@
-name: promote-events-gf
-run-name: promote-gf ${{ inputs.environment }}
+name: promote-gf
+run-name: promote-gf ${{ inputs.image_tax_prefix }}
 
 on:
   workflow_call:
     inputs:
-      environment:
+      tag_suffix:
         required: true
         type: string
   workflow_dispatch:
     inputs:
-      environment:
-        description: AB2D environment
-        required: true
-        type: choice
-        options:
-          - sandbox
-          - prod
+      image_tag_suffix:
+        description: Docker tag suffix
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -28,20 +25,19 @@ jobs:
       id-token: write
     runs-on: codebuild-ab2d-events-${{github.run_id}}-${{github.run_attempt}}
     env:
-      AB2D_ENV: ${{ inputs.environment }}
-      TAG_NAME: event-service
-      SOURCE_REPO: ab2d-test-services # not ab2d-impl-services
+      TAG_NAME: event-service-${{ inputs.image_tag_suffix || github.ref }}
+      SOURCE_REPO: ab2d-events
     steps:
       - name: Define destination repo
         id: repos
         run: |
-          echo "DEST_REPO=ab2d-$AB2D_ENV-services" >> $GITHUB_OUTPUT
+          echo "DEST_REPO=ab2d-events" >> $GITHUB_OUTPUT 
 
       - name: Authenticate to source account (pull from test)
         uses: aws-actions/configure-aws-credentials@v4.0.2
         with:
           aws-region: ${{ vars.AWS_REGION }}
-          role-to-assume: arn:aws:iam::${{ secrets.GF_NON_PROD_ACCOUNT }}:role/delegatedadmin/developer/ab2d-test-github-actions
+          role-to-assume: arn:aws:iam::${{ secrets.GF_NON_PROD_ACCOUNT }}:role/delegatedadmin/developer/ab2d-dev-github-actions
 
       - name: Pull image from test ECR
         id: pull-image
@@ -57,7 +53,8 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4.0.2
         with:
           aws-region: ${{ vars.AWS_REGION }}
-          role-to-assume: arn:aws:iam::${{ secrets.GF_PROD_ACCOUNT }}:role/delegatedadmin/developer/ab2d-${{ env.AB2D_ENV }}-github-actions
+          role-to-assume: |
+            arn:aws:iam::${{ secrets.GF_PROD_ACCOUNT }}:role/delegatedadmin/developer/ab2d-sandbox-github-actions
 
       - name: Tag and push image to destination ECR
         env:
