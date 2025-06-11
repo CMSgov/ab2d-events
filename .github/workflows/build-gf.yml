@@ -10,7 +10,7 @@ jobs:
     runs-on: codebuild-ab2d-events-${{github.run_id}}-${{github.run_attempt}}
     env:
       ECR_REPO: ab2d-events
-      TAG_PREFIX: event-service # TODO revert back
+      TAG_PREFIX: event-service # TODO should this use `events-` or `event-` ? Terraform uses `event-` IIRC
       AWS_ACCOUNT: ${{ secrets.GF_NON_PROD_ACCOUNT }}
     permissions:
       contents: read
