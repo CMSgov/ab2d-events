@@ -2,9 +2,6 @@ name: promote-gf
 run-name: promote-gf ${{ inputs.image_tax_prefix }}
 
 on:
-  push:
-    branches:
-      - more-workflows-gf
   workflow_call:
     inputs:
       image_tag_suffix:
