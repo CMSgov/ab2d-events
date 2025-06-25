@@ -1,0 +1,49 @@
+{
+  "name": "ab2d-events",
+  "description": "This service extracts event data from a SQS queue and process it.",
+  "longDescription": "AB2D mircroseervice extracts event data from event-sqs queue, processes it and insert data to the database for audit purpose",
+  "status": "production",
+  "permissions": {
+    "licenses": [
+      {
+        "URL": "LICENSE",
+        "name": "CC0-1.0"
+      }
+    ],
+    "usageType": "openSource",
+    "exemptionText": ""
+  },
+  "organization": "Centers for Medicare & Medicaid Services",
+  "repositoryURL": "https://github.com/CMSGov/ab2d-events",
+  "repositoryHost": "github.com/CMSgov",
+  "repositoryVisibility": "public",
+  "vcs": "git",
+  "laborHours": [""],
+  "reuseFrequency": {
+    "forks": "0"
+  },
+  "platforms": [ "other" ],
+  "categories": [ "healthcare" ],
+  "softwareType": "standalone/backend",
+  "languages": [ "Java" ],
+  "maintenance": "contract",
+  "contractNumber": "3",
+  "date": [""],
+  "tags": [ "dsacms-tier3" ],
+  "contact": {
+    "email": "ab2d@cms.hhs.gov",
+    "name": "CMS Open Source Program Office"
+  },
+  "feedbackMechanisms": ["https://github.com/CMSGov/ab2d-events/issues"],
+  "localisation": "false",
+  "repositoryType": "Apps",
+  "userInput": "No",
+  "fismaLevel": "Low",
+  "group": "CMS",
+  "projects": [""],
+  "systems": [""],
+  "upstream": [""https://github.com/CMSgov/ab2d-properties/network/dependencies""],
+  "subsetInHealthcare": ["Policy, Operational, Medicare, Medicaid"],
+  "userType": ["Providers"],
+  "maturityModelTier": 3
+}

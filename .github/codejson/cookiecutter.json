@@ -1,6 +1,6 @@
 {
     "project_name": "ab2d-events", 
-    "project_repo_name": "ab2d--events", 
+    "project_repo_name": "ab2d-events", 
     "project_org": "CMSGov", 
     "description": "A short description of the project.",
     "long_description": "A longer description of the project.",
@@ -20,7 +20,7 @@
     "tags": "dsacms-tier3",
     "contact_email": "opensource@cms.hhs.gov",
     "contact_name": "CMS Open Source Program Office",
-    "feedback_mechanisms": "https://github.com/CMSGov/ab2d--events/issues",
+    "feedback_mechanisms": "https://github.com/CMSGov/ab2d-events/issues",
     "localisation": ["true", "false"],
     "repository_type" : ["Package", "Website", "Standards", "Libraries", "Data", "Apps", "Tools", "APIs", "Docs"],
     "user_input": ["Yes", "No"],
