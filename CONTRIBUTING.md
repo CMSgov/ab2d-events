@@ -38,9 +38,9 @@ We follow the [GitHub Flow Workflow](https://guides.github.com/introduction/flow
 2.  Check out the `main` branch
 3.  Create a feature branch
 4.  Write code and tests for your change
-5.  From your branch, make a pull request against `CMSGov/ab2d--events/main`
+5.  From your branch, make a pull request against `CMSgov/ab2d--events/main`
 6.  Work with repo maintainers to get your change reviewed
-7.  Wait for your change to be pulled into `CMSGov/ab2d--events/main`
+7.  Wait for your change to be pulled into `CMSgov/ab2d--events/main`
 8.  Delete your feature branch
 -->
 
@@ -176,7 +176,7 @@ ab2d--events will see regular updates and new releases. This section describes t
 
 <!-- ### Versioning
 
-ab2d--events uses [Semantic Versioning](https://semver.org/). Each release is associated with a [`git tag`](github.com/CMSGov/ab2d--events/tags) of the form `X.Y.Z`.
+ab2d--events uses [Semantic Versioning](https://semver.org/). Each release is associated with a [`git tag`](github.com/CMSgov/ab2d--events/tags) of the form `X.Y.Z`.
 
 Given a version number in the `MAJOR.MINOR.PATCH` (eg., `X.Y.Z`) format, here are the differences in these terms:
 
@@ -374,7 +374,7 @@ In rare cases, a hotfix for a prior release may be required out-of-phase with th
    This is a pre-release: DO NOT check
    ```
 
-[proj-releases-new]: https://github.com/CMSGov/ab2d--events/releases/new
+[proj-releases-new]: https://github.com/CMSgov/ab2d--events/releases/new
 -->
 
 ## Documentation
@@ -382,7 +382,7 @@ In rare cases, a hotfix for a prior release may be required out-of-phase with th
 <!-- TODO: Documentation Example
 
 We also welcome improvements to the project documentation or to the existing
-docs. Please file an [issue](https://github.com/CMSGov/ab2d--events/issues).
+docs. Please file an [issue](https://github.com/CMSgov/ab2d--events/issues).
 -->
 
 ## Policies
@@ -390,7 +390,7 @@ docs. Please file an [issue](https://github.com/CMSGov/ab2d--events/issues).
 ### Open Source Policy
 
 We adhere to the [CMS Open Source
-Policy](https://github.com/CMSGov/cms-open-source-policy). If you have any
+Policy](https://github.com/CMSgov/cms-open-source-policy). If you have any
 questions, just [shoot us an email](mailto:opensource@cms.hhs.gov).
 
 ### Security and Responsible Disclosure Policy
