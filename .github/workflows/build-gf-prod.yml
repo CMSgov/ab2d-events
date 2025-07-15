@@ -2,9 +2,6 @@ name: Build-gf
 run-name: build-gf
 
 on:
-  push:
-    branches:
-      - db-ApplicationName
   workflow_call:
   workflow_dispatch:
 
