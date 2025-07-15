@@ -1,5 +1,5 @@
-name: Build-gf
-run-name: build-gf
+name: Build-gf PROD
+run-name: build-gf PROD
 
 on:
   workflow_call:
