@@ -2,6 +2,9 @@ name: Build-gf
 run-name: build-gf
 
 on:
+  push:
+    branches:
+      - db-ApplicationName
   workflow_call:
   workflow_dispatch:
 
@@ -11,7 +14,7 @@ jobs:
     env:
       ECR_REPO: ab2d-events
       TAG_PREFIX: event-service # TODO should this use `events-` or `event-` ? Terraform uses `event-` IIRC
-      AWS_ACCOUNT: ${{ secrets.GF_NON_PROD_ACCOUNT }}
+      AWS_ACCOUNT: ${{ secrets.GF_PROD_ACCOUNT }}
     permissions:
       contents: read
       id-token: write
@@ -38,7 +41,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4.0.2
         with:
           aws-region: ${{ vars.AWS_REGION }}
-          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT }}:role/delegatedadmin/developer/ab2d-dev-github-actions
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT }}:role/delegatedadmin/developer/ab2d-prod-github-actions
 
       - name: Build libraries
         run: |
