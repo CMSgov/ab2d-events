@@ -34,7 +34,7 @@ jobs:
     uses: cmsgov/ab2d/.github/workflows/terraform-microservices-gf.yml@main
     with:
       environment: ${{ inputs.environment }}
-      contracts_service_image: event-service-${{ inputs.image_tag_suffix || github.ref }}
+      events_service_image_tag: event-service-${{ inputs.image_tag_suffix || github.ref }}
       apply: true
       ref: main
       runner: codebuild-ab2d-events-${{github.run_id}}-${{github.run_attempt}}
