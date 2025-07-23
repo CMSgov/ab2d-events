@@ -1,5 +1,5 @@
-name: promote-gf
-run-name: promote-gf ${{ inputs.image_tax_prefix }}
+name: deploy-gf
+run-name: deploy-gf ${{ inputs.image_tax_prefix }}
 
 on:
   workflow_call:
